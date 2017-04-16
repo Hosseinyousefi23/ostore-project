@@ -1,5 +1,7 @@
 package executer;
 
+import scheduler.MyThread;
+
 public class IfNode extends Node {
 
 	public IfNode(String name) {
@@ -7,7 +9,7 @@ public class IfNode extends Node {
 	}
 
 	@Override
-	public void execute(Thread t) {
+	public void execute(MyThread t) {
 		ExprNode expression = (ExprNode) children.get(2);
 		Node ifBlock = children.get(4).children.get(1);
 		expression.execute(t);

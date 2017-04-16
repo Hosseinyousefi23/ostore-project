@@ -1,5 +1,6 @@
 package executer;
 
+import scheduler.MyThread;
 import ui.UserInterface;
 
 public class QuitNode extends Node {
@@ -9,7 +10,7 @@ public class QuitNode extends Node {
 	}
 
 	@Override
-	public void execute(Thread t) {
+	public void execute(MyThread t) {
 		UserInterface.quited = true;
 	}
 }

@@ -1,5 +1,7 @@
 package executer;
 
+import scheduler.MyThread;
+
 public class ExprNode extends Node {
 	private Object result;
 
@@ -8,7 +10,7 @@ public class ExprNode extends Node {
 	}
 
 	@Override
-	public void execute(Thread t) {
+	public void execute(MyThread t) {
 		Node firstChild = children.get(0);
 		switch (firstChild.getName()) {
 
@@ -50,7 +52,8 @@ public class ExprNode extends Node {
 					break;
 
 				case "|":
-					result = (int) firstResult + (int) secondResult - (int) firstResult * (int) secondResult;
+					result = (int) firstResult + (int) secondResult
+							- (int) firstResult * (int) secondResult;
 					break;
 
 				case "&":
@@ -58,7 +61,8 @@ public class ExprNode extends Node {
 					break;
 
 				case "^":
-					result = (int) Math.pow((int) firstResult, (int) secondResult);
+					result = (int) Math.pow((int) firstResult,
+							(int) secondResult);
 					break;
 
 				case "<":
@@ -134,7 +138,8 @@ public class ExprNode extends Node {
 			int firstindexResult = (int) firstIndex.getResult();
 			int secondindexResult = (int) secondIndex.getResult();
 			String StringIndexResult = (String) StringIndex.getResult();
-			result = StringIndexResult.substring(firstindexResult, secondindexResult);
+			result = StringIndexResult.substring(firstindexResult,
+					secondindexResult);
 
 			break;
 

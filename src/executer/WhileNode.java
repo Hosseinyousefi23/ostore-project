@@ -1,5 +1,7 @@
 package executer;
 
+import scheduler.MyThread;
+
 public class WhileNode extends Node {
 
 	public WhileNode(String name) {
@@ -7,7 +9,7 @@ public class WhileNode extends Node {
 	}
 
 	@Override
-	public void execute(Thread t) {
+	public void execute(MyThread t) {
 		ExprNode whilecontroller = (ExprNode) children.get(2);
 		Node whileBlock = children.get(4).children.get(1);
 

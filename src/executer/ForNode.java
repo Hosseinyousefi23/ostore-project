@@ -1,5 +1,7 @@
 package executer;
 
+import scheduler.MyThread;
+
 public class ForNode extends Node {
 
 	public ForNode(String name) {
@@ -7,7 +9,7 @@ public class ForNode extends Node {
 	}
 
 	@Override
-	public void execute(Thread t) {
+	public void execute(MyThread t) {
 		AssignmentNode firstAssign = (AssignmentNode) children.get(2);
 		AssignmentNode secondAssign = (AssignmentNode) children.get(6);
 		ExprNode Controller = (ExprNode) children.get(4);
@@ -26,6 +28,5 @@ public class ForNode extends Node {
 		}
 
 	}
-
 
 }
