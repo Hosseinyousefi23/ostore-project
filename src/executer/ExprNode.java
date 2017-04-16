@@ -1,12 +1,14 @@
 package executer;
 
+import parser.Node;
+import parser.ParseTree;
 import scheduler.MyThread;
 
 public class ExprNode extends Node {
 	private Object result;
 
-	public ExprNode(String name) {
-		super(name);
+	public ExprNode(String name, ParseTree tree) {
+		super(name, tree);
 	}
 
 	@Override
@@ -22,7 +24,7 @@ public class ExprNode extends Node {
 			} else {
 				ExprNode First = (ExprNode) children.get(0);
 				ExprNode Second = (ExprNode) children.get(2);
-				Node operation = children.get(1).children.get(0);
+				Node operation = children.get(1).getChildren().get(0);
 
 				First.execute(t);
 				Second.execute(t);
@@ -149,7 +151,7 @@ public class ExprNode extends Node {
 			break;
 
 		case "<literal>":
-			Object literal = children.get(0).children.get(0).getContent();
+			Object literal = children.get(0).getChildren().get(0).getContent();
 			if (isString((String) literal)) {
 				literal = removequotes((String) literal);
 			} else {

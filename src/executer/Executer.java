@@ -2,6 +2,7 @@ package executer;
 
 import java.util.HashMap;
 
+import parser.ParseTree;
 import parser.Parser;
 import scheduler.MyThread;
 
@@ -15,7 +16,7 @@ public class Executer {
 	}
 
 	public void execute(String code, MyThread thread) {
-		Node root = parser.parse(code);
-		root.execute(thread);
+		ParseTree tree = parser.parse(code);
+		tree.getRoot().execute(thread);
 	}
 }

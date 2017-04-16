@@ -1,19 +1,21 @@
-package executer;
+package parser;
 
 import java.util.ArrayList;
 
 import scheduler.MyThread;
 
 public class Node {
+	protected ParseTree tree;
 	protected Node parrent;
 	protected ArrayList<Node> children;
 	protected String name;
 	protected String content;
-	
+	protected boolean visited = false;
 
-	public Node(String name) {
+	public Node(String name, ParseTree tree) {
 		children = new ArrayList<Node>();
 		this.name = name;
+		this.tree = tree;
 	}
 
 	public ArrayList<Node> getChildren() {
@@ -63,7 +65,7 @@ public class Node {
 	public String getContent() {
 		return content;
 	}
-	
+
 	protected boolean intToBoolean(int i) {
 		return i != 0;
 	}

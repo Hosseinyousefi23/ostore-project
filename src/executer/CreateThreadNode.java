@@ -1,9 +1,12 @@
 package executer;
 
-public class CreateThreadNode extends Node{
+import parser.Node;
+import parser.ParseTree;
 
-	public CreateThreadNode(String name) {
-		super(name);
+public class CreateThreadNode extends Node {
+
+	public CreateThreadNode(String name, ParseTree tree) {
+		super(name, tree);
 		// TODO Auto-generated constructor stub
 	}
 

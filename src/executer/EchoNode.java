@@ -1,11 +1,13 @@
 package executer;
 
+import parser.Node;
+import parser.ParseTree;
 import scheduler.MyThread;
 
 public class EchoNode extends Node {
 
-	public EchoNode(String name) {
-		super(name);
+	public EchoNode(String name, ParseTree tree) {
+		super(name, tree);
 	}
 
 	@Override

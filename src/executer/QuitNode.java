@@ -1,12 +1,14 @@
 package executer;
 
+import parser.Node;
+import parser.ParseTree;
 import scheduler.MyThread;
 import ui.UserInterface;
 
 public class QuitNode extends Node {
 
-	public QuitNode(String name) {
-		super(name);
+	public QuitNode(String name, ParseTree tree) {
+		super(name, tree);
 	}
 
 	@Override

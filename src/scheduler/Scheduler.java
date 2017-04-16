@@ -1,7 +1,9 @@
 package scheduler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import semaphore.Semaphore;
 import executer.Executer;
 
 public class Scheduler {
@@ -9,19 +11,24 @@ public class Scheduler {
 	private int schedulTime = 100;
 	private Process defaultProcess;
 	private ArrayList<Process> readyQueue;
+	private ArrayList<Process> startingQueue;
+	private HashMap<String, Semaphore> semaphores;
 	private Executer exe;
 
 	public Scheduler(int cores, int schedulTime) {
 		readyQueue = new ArrayList<Process>();
+		startingQueue = new ArrayList<Process>();
 		setCores(cores);
 		setSchedulTime(schedulTime);
 		exe = new Executer();
-		defaultProcess = new Process();
+		semaphores = new HashMap<String, Semaphore>();
+		// defaultProcess = new Process();
 
 	}
 
 	public void start(String code) {
-
+		Process init = new Process(code);
+		startingQueue.add(init);
 	}
 
 	public void executeProcess(Process p) {

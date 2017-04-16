@@ -1,9 +1,12 @@
 package executer;
 
-public class SignalNode extends Node{
+import parser.Node;
+import parser.ParseTree;
 
-	public SignalNode(String name) {
-		super(name);
+public class SignalNode extends Node {
+
+	public SignalNode(String name, ParseTree tree) {
+		super(name, tree);
 		// TODO Auto-generated constructor stub
 	}
 

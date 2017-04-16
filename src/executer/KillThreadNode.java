@@ -1,9 +1,12 @@
 package executer;
 
-public class KillThreadNode extends Node{
+import parser.Node;
+import parser.ParseTree;
 
-	public KillThreadNode(String name) {
-		super(name);
+public class KillThreadNode extends Node {
+
+	public KillThreadNode(String name, ParseTree tree) {
+		super(name, tree);
 		// TODO Auto-generated constructor stub
 	}
 

@@ -3,23 +3,31 @@ package scheduler;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import executer.Node;
+import parser.Node;
 
 public class Process {
 	private int id;
-	private int programCounter = 0;
 	private ArrayList<MyThread> myThreads;
 	private MyThread mainThread;
 	private ArrayList<HashMap<String, Object>> globalVars;
+	private ArrayList<Process> waitingQueue;
 
-	public Process() {
-		globalVars = new ArrayList<HashMap<String, Object>>();
-	}
-
-	public Process(int programCounter, Node bigRoot) {
+	private void init() {
 		myThreads = new ArrayList<MyThread>();
 		globalVars = new ArrayList<HashMap<String, Object>>();
-		mainThread = new MyThread(bigRoot, this);
+		waitingQueue = new ArrayList<Process>();
+	}
+
+	public Process(String code, int pc) {
+		init();
+		mainThread = new MyThread(code, pc, this);
+
+	}
+
+	public Process(String code) {
+		init();
+		mainThread = new MyThread(code, this);
+
 	}
 
 	public int getID() {

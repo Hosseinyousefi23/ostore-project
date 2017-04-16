@@ -11,4 +11,12 @@ public class Semaphore {
 		waitingQueue = new ArrayList<Process>();
 	}
 
+	public void Wait() {
+
+	}
+
+	public void signal() {
+
+	}
+
 }

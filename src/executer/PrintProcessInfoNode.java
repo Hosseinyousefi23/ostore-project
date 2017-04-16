@@ -1,11 +1,13 @@
 package executer;
 
+import parser.Node;
+import parser.ParseTree;
 import scheduler.MyThread;
 
 public class PrintProcessInfoNode extends Node {
 
-	public PrintProcessInfoNode(String name) {
-		super(name);
+	public PrintProcessInfoNode(String name, ParseTree tree) {
+		super(name, tree);
 
 	}
 

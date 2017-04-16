@@ -15,7 +15,6 @@ import executer.ForNode;
 import executer.IfNode;
 import executer.KillProcessNode;
 import executer.KillThreadNode;
-import executer.Node;
 import executer.PrintProcessInfoNode;
 import executer.PrintThreadInfoNode;
 import executer.QuitNode;
@@ -35,21 +34,25 @@ public class Parser {
 
 	private ArrayList<String> followInprocess;
 
+	private ParseTree tree;
+
 	private HashMap<String, ArrayList<ArrayList<String>>> rules;
 
 	public Parser() {
 		scanner = new Scanner();
 		followInprocess = new ArrayList<String>();
 		rules = new HashMap<String, ArrayList<ArrayList<String>>>();
+		tree = new ParseTree();
 		extractRules();
 	}
 
-	public Node parse(String code) {
+	public ParseTree parse(String code) {
 		scanner.scan(code);
 		token = scanner.nextToken();
-		Node root = new Node("<program>");
+		Node root = new Node("<program>", tree);
 		buildTree("<program>", root);
-		return root;
+		tree.setRoot(root);
+		return tree;
 	}
 
 	private boolean buildTree(String element, Node root) {
@@ -67,14 +70,17 @@ public class Parser {
 				} else {
 					for (String childElement : rule) {
 						if (isFakeElement(childElement)) {
-							String childElement1 = childElement.substring(1, childElement.length() - 1);
+							String childElement1 = childElement.substring(1,
+									childElement.length() - 1);
 							if (buildTree(childElement1, root)) {
 								// System.out.println(childElement1);
 								virgin = false;
 								continue;
 							} else {
 								if (!virgin) {
-									throw new RuntimeException("UnexpectedToken at line  = \"" + token + "\"");
+									throw new RuntimeException(
+											"UnexpectedToken at line  = \""
+													+ token + "\"");
 								}
 								continue outerloop;
 							}
@@ -87,7 +93,9 @@ public class Parser {
 								continue;
 							} else {
 								if (!virgin) {
-									throw new RuntimeException("UnexpectedToken at line " + " = \"" + token + "\"");
+									throw new RuntimeException(
+											"UnexpectedToken at line "
+													+ " = \"" + token + "\"");
 								}
 								continue outerloop;
 							}
@@ -101,7 +109,8 @@ public class Parser {
 		} else {
 			if (token.contains(" ")) {
 				String tokenValue = token.substring(0, token.indexOf(" "));
-				String content = token.substring(token.indexOf(" ") + 1, token.length());
+				String content = token.substring(token.indexOf(" ") + 1,
+						token.length());
 				if (tokenValue.equals(element)) {
 					token = scanner.nextToken();
 					root.setContent(content);
@@ -121,49 +130,49 @@ public class Parser {
 	private Node createNode(String element) {
 		switch (element) {
 		case "<assignment>":
-			return new AssignmentNode(element);
+			return new AssignmentNode(element, tree);
 		case "<echo>":
-			return new EchoNode(element);
+			return new EchoNode(element, tree);
 		case "<expr>":
 		case "<simple_expr>":
-			return new ExprNode(element);
+			return new ExprNode(element, tree);
 		case "<quit>":
-			return new QuitNode(element);
+			return new QuitNode(element, tree);
 		case "<statement>":
 			switch (token) {
 			case "IF":
-				return new IfNode(element);
+				return new IfNode(element, tree);
 			case "WHILE":
-				return new WhileNode(element);
+				return new WhileNode(element, tree);
 			case "FOR":
-				return new ForNode(element);
+				return new ForNode(element, tree);
 			}
 		case "<create_process>":
-			return new CreateProcessNode(element);
+			return new CreateProcessNode(element, tree);
 		case "<kill_process>":
-			return new KillProcessNode(element);
+			return new KillProcessNode(element, tree);
 		case "<create_thread>":
-			return new CreateThreadNode(element);
+			return new CreateThreadNode(element, tree);
 		case "<kill_thread>":
-			return new KillThreadNode(element);
+			return new KillThreadNode(element, tree);
 		case "<exec>":
-			return new ExecNode(element);
+			return new ExecNode(element, tree);
 		case "<wait_for_process>":
-			return new WaitForProcessNode(element);
+			return new WaitForProcessNode(element, tree);
 		case "<wait_for_thread>":
-			return new WaitForThreadNode(element);
+			return new WaitForThreadNode(element, tree);
 		case "<print_process_info>":
-			return new PrintProcessInfoNode(element);
+			return new PrintProcessInfoNode(element, tree);
 		case "<print_thread_info>":
-			return new PrintThreadInfoNode(element);
+			return new PrintThreadInfoNode(element, tree);
 		case "<semaphore>":
-			return new SemaphoreNode(element);
+			return new SemaphoreNode(element, tree);
 		case "<wait>":
-			return new WaitNode(element);
+			return new WaitNode(element, tree);
 		case "<signal>":
-			return new SignalNode(element);
+			return new SignalNode(element, tree);
 		default:
-			return new Node(element);
+			return new Node(element, tree);
 
 		}
 	}
@@ -185,8 +194,10 @@ public class Parser {
 			ArrayList<ArrayList<String>> elementRules = rules.get(key);
 			for (ArrayList<String> rule : elementRules) {
 				for (int i = 0; i < rule.size(); i++) {
-					if (rule.get(i).equals(element) || rule.get(i).equals("<" + element + ">")) {
-						if (i == rule.size() - 1 && !followInprocess.contains(key)) {
+					if (rule.get(i).equals(element)
+							|| rule.get(i).equals("<" + element + ">")) {
+						if (i == rule.size() - 1
+								&& !followInprocess.contains(key)) {
 							ret = union(ret, follow(key));
 						} else if (!followInprocess.contains(key)) {
 							ret = union(ret, first(rule.get(i + 1)));
@@ -235,7 +246,8 @@ public class Parser {
 		return false;
 	}
 
-	private ArrayList<String> union(ArrayList<String> array1, ArrayList<String> array2) {
+	private ArrayList<String> union(ArrayList<String> array1,
+			ArrayList<String> array2) {
 		ArrayList<String> ret = new ArrayList<String>();
 		for (String element : array1) {
 			if (!ret.contains(element)) {
@@ -256,7 +268,8 @@ public class Parser {
 
 	private void extractRules() {
 		try {
-			java.util.Scanner read = new java.util.Scanner(new File("grammar.txt"));
+			java.util.Scanner read = new java.util.Scanner(new File(
+					"grammar.txt"));
 			String grammar = read.useDelimiter("\\Z").next();
 			String[] rulesString = grammar.split("\n");
 			for (String s : rulesString) {

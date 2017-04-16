@@ -3,22 +3,33 @@ package scheduler;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import executer.Node;
+import parser.ParseTree;
+import parser.Parser;
 
 public class MyThread {
 	private int id;
+	private String code;
+	private ParseTree programTree;
+	private ArrayList<Process> waitingQueue;
 	private ArrayList<HashMap<String, Object>> localVars;
-	private Node programRoot;
 	private Process parent;
 
-	public MyThread(Node bigRoot, Process parent) {
-		localVars = new ArrayList<HashMap<String, Object>>();
-		setProgramRoot(bigRoot);
+	private void init(String code, Process parent) {
+		setCode(code);
 		setParent(parent);
+		waitingQueue = new ArrayList<Process>();
+		localVars = new ArrayList<HashMap<String, Object>>();
+		Parser p = new Parser();
+		programTree = p.parse(code);
 	}
 
-	public void setProgramRoot(Node programRoot) {
-		this.programRoot = programRoot;
+	public MyThread(String code, int pc, Process parent) {
+		init(code, parent);
+
+	}
+
+	public MyThread(String code, Process parent) {
+		init(code, parent);
 	}
 
 	public void setParent(Process parent) {
@@ -28,9 +39,13 @@ public class MyThread {
 	public Process getProcess() {
 		return this.parent;
 	}
-	
-	public int getID(){
-	return id;
+
+	public int getID() {
+		return id;
 	}
-	
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
 }
