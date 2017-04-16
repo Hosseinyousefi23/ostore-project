@@ -1,0 +1,64 @@
+<program> ==> <assignment> <<program>>
+<program> ==> <echo> <<program>>
+<program> ==> <statement> <<program>>
+<program> ==> <quit> <<program>>
+<program> ==> <create_process> <<program>>
+<create_process> ==> CREATE_PROCESS ( <expr> )
+<program> ==> <kill_process> <<program>>
+<kill_process> ==> KILL_PROCESS ( <expr> )
+<program> ==> <create_thread> <<program>>
+<create_thread> ==> CREATE_THREAD ( <expr> )
+<program> ==> <kill_thread> <<program>>
+<kill_thread> ==> KILL_THREAD ( <expr> )
+<program> ==> <exec> <<program>>
+<exec> ==> EXEC ( <expr> )
+<program> ==> <wait_for_process> <<program>>
+<wait_for_process> ==> WAIT_FOR_PROCESS ( <expr> )
+<program> ==> <wait_for_thread> <<program>>
+<wait_for_thread> ==> WAIT_FOR_THREAD ( <expr> )
+<program> ==> <print_process_info> <<program>>
+<print_process_info> ==> PRINT_PROCESS_INFO ( )
+<program> ==> <print_thread_info> <<program>>
+<print_thread_info> ==> PRINT_THREAD_INFO ( )
+<program> ==> <semaphore> <<program>>
+<semaphore> ==> SEMAPHORE ( ID , <expr> )
+<program> ==> <wait> <<program>>
+<wait> ==> WAIT ( ID )
+<program> ==> <signal> <<program>>
+<signal> ==> SIGNAL ( ID )
+<quit> ==> QUIT ( )
+<program> ==> \epsilon
+<assignment> ==> SET ( ID , <expr> )
+<echo> ==> ECHO ( <expr> )
+<statement> ==> IF ( <expr> ) <block> <<continue_if>>
+<continue_if> ==> ELSE <block>
+<continue_if> ==> \epsilon
+<statement> ==> WHILE ( <expr> ) <block>
+<statement> ==> FOR ( <assignment> ; <expr> ; <assignment> ) <block>
+<block> ==> { <program> }
+<expr> ==> <simple_expr> <<expr_rest>>
+<expr_rest> ==> <op> <simple_expr>
+<expr_rest> ==> \epsilon
+<simple_expr> ==> ! <simple_expr>
+<simple_expr> ==> - <simple_expr>
+<simple_expr> ==> ( <expr> )
+<simple_expr> ==> CONCAT ( <expr> , <expr> )
+<simple_expr> ==> INDEX ( <expr> , <expr> , <expr> )
+<simple_expr> ==> ID
+<simple_expr> ==> <literal>
+<op> ==> +
+<op> ==> -
+<op> ==> *
+<op> ==> /
+<op> ==> %
+<op> ==> |
+<op> ==> &
+<op> ==> ^
+<op> ==> <
+<op> ==> >
+<op> ==> <=
+<op> ==> >=
+<op> ==> ==
+<op> ==> !=
+<literal> ==> INT_LITERAL
+<literal> ==> STRING_LITERAL
