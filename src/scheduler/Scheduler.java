@@ -7,6 +7,7 @@ import semaphore.Semaphore;
 import executer.Executer;
 
 public class Scheduler {
+	public int clock = 0;
 	private int cores = 4;
 	private int schedulTime = 100;
 	private Process defaultProcess;
@@ -29,6 +30,7 @@ public class Scheduler {
 	public void start(String code) {
 		Process init = new Process(code);
 		startingQueue.add(init);
+		//TODO long term and short term
 	}
 
 	public void executeProcess(Process p) {
