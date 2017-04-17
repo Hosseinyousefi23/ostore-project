@@ -10,6 +10,7 @@ public class MyThread {
 	private static int idGenerator = 1;
 	private int id;
 	private String code;
+	private int programCounter = 0;
 	private ParseTree programTree;
 	private ArrayList<Process> waitingQueue;
 	private ArrayList<HashMap<String, Object>> localVars;
@@ -52,6 +53,11 @@ public class MyThread {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	public void executeNextInstruction() {
+		// TODO Auto-generated method stub
+
 	}
 
 }

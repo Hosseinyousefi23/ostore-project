@@ -77,17 +77,10 @@ public class Process {
 	}
 
 	private MyThread extractThreadToRun() {
-		Iterator<Integer> keys = runningThreads.keySet().iterator();
-		MyThread firstCandidate = runningThreads.get(keys.next());
-		while (keys.hasNext()) {
-			MyThread secondCandidateKey = runningThreads.get(keys.next());
-			
-		}
-		while (keys.hasNext()) {
-			int secondCandidateKey = keys.next();
-
-		}
-
+		Object[] keys = runningThreads.keySet().toArray();
+		int index = programCounter % runningThreads.size();
+		int tid = (Integer) keys[index];
+		return runningThreads.get(tid);
 	}
 
 }
