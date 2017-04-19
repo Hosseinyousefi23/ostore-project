@@ -3,6 +3,8 @@ package scheduler;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import parser.ParseTree;
+import parser.Parser;
 import executer.Executer;
 import semaphore.Semaphore;
 
@@ -29,7 +31,9 @@ public class Scheduler {
 
 	public void start(String code) {
 		int pid = Process.getNewPid();
-		Process init = new Process(pid, code, null);
+		Parser parser = new Parser();
+		ParseTree programTree = parser.parse(code);
+		Process init = new Process(pid, programTree, null, this);
 		readyQueue.put(pid, init);
 		int runningCounter = 0;
 		while (!isDone()) {
@@ -57,8 +61,6 @@ public class Scheduler {
 		runningQueue.remove(p);
 		readyQueue.put(p.getID(), p);
 	}
-	
-
 
 	private boolean timeToCollect(Process p) {
 		return runningQueue.containsValue(p) && timeUp(p);
@@ -115,13 +117,9 @@ public class Scheduler {
 		return runningQueue.size() == cores;
 	}
 
-	private void addToReadyQueue(Process p) {
+	public void addToReadyQueue(Process p) {
 		p.setStartedReadyOn(clock);
 		readyQueue.put(p.getID(), p);
-	}
-
-	public void executeProcess(Process p) {
-
 	}
 
 	public void setCores(int cores) {

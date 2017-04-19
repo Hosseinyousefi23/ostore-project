@@ -2,7 +2,8 @@ package scheduler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+
+import parser.ParseTree;
 
 public class Process {
 	private static int idGenerator = 1;
@@ -16,12 +17,13 @@ public class Process {
 	private ArrayList<Process> waitingQueue;
 	private ArrayList<Process> children;
 	private Process parent;
+	private Scheduler scheduler;
 
 	public static int getNewPid() {
 		return idGenerator++;
 	}
 
-	private void init(int pid, Process parent) {
+	private void init(int pid, Process parent, Scheduler scheduler) {
 		this.id = pid;
 		runningThreads = new HashMap<Integer, MyThread>();
 		waitingThreads = new HashMap<Integer, MyThread>();
@@ -29,19 +31,44 @@ public class Process {
 		waitingQueue = new ArrayList<Process>();
 		children = new ArrayList<Process>();
 		this.parent = parent;
+		this.scheduler = scheduler;
 	}
 
-	public Process(int pid, String code, int pc, Process parent) {
-		init(pid, parent);
+	public Process(int pid, ParseTree programTree, Process parent,
+			Scheduler scheduler) {
+		init(pid, parent, scheduler);
 		int tid = MyThread.getNewTid();
-		mainThread = new MyThread(tid, code, pc, this);
+		mainThread = new MyThread(tid, programTree, this);
+		runThread(mainThread);
 
 	}
 
-	public Process(int pid, String code, Process parent) {
-		init(pid, parent);
+	public Process(int pid, ParseTree programTree, Process parent,
+			Scheduler scheduler, int parentTid) {
+		init(pid, parent, scheduler);
 		int tid = MyThread.getNewTid();
-		mainThread = new MyThread(tid, code, this);
+		int pc = programTree.getPc(parentTid);
+		this.programCounter = pc;
+		mainThread = new MyThread(tid, programTree, pc, this, parentTid);
+		runThread(mainThread);
+
+	}
+
+	public void runThread(MyThread t) {
+		runningThreads.put(t.getID(), t);
+	}
+
+	private MyThread extractThreadToRun() {
+		Object[] keys = runningThreads.keySet().toArray();
+		int index = programCounter % runningThreads.size();
+		int tid = (Integer) keys[index];
+		return runningThreads.get(tid);
+	}
+
+	public void executeNextInstruction() {
+		MyThread t = extractThreadToRun();
+		t.executeNextInstruction();
+		programCounter++;
 
 	}
 
@@ -69,22 +96,16 @@ public class Process {
 		return programCounter;
 	}
 
-	public void executeNextInstruction() {
-		MyThread t = extractThreadToRun();
-		t.executeNextInstruction();
-		programCounter++;
-
-	}
-
-	private MyThread extractThreadToRun() {
-		Object[] keys = runningThreads.keySet().toArray();
-		int index = programCounter % runningThreads.size();
-		int tid = (Integer) keys[index];
-		return runningThreads.get(tid);
-	}
-
 	public void finish(MyThread t) {
 		runningThreads.remove(t);
+	}
+
+	public Scheduler getScheduler() {
+		return scheduler;
+	}
+
+	public void addChildProcess(Process child) {
+		children.add(child);
 	}
 
 }

@@ -17,7 +17,7 @@ public class ForNode extends Node {
 		secondAssign = (AssignmentNode) children.get(6);
 		controller = (ExprNode) children.get(4);
 		block = children.get(8).getChildren().get(1);
-		nextCommand = firstAssign;
+
 	}
 
 	@Override
@@ -38,21 +38,27 @@ public class ForNode extends Node {
 	}
 
 	@Override
-	protected Node findNextInstruction() {
-		if (nextCommand == firstAssign) {
+	protected Node findNextInstruction(MyThread t) {
+		if (nextCommands.get(t.getID()) == firstAssign) {
 			return controller;
-		} else if (nextCommand == secondAssign) {
+		} else if (nextCommands.get(t.getID()) == secondAssign) {
 			return controller;
-		} else if (nextCommand == controller) {
+		} else if (nextCommands.get(t.getID()) == controller) {
 			if (intToBoolean((int) controller.getResult())) {
 				return block;
 			} else {
 				return null;
 			}
-		} else if (nextCommand == block) {
+		} else if (nextCommands.get(t.getID()) == block) {
 			return secondAssign;
 		}
 		return null;
+	}
+
+	@Override
+	public void initializeThread(int tid) {
+		super.initializeThread(tid);
+		nextCommands.put(tid, firstAssign);
 	}
 
 }

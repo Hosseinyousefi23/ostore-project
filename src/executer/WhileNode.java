@@ -12,7 +12,7 @@ public class WhileNode extends Node {
 		super(name, tree);
 		whileController = (ExprNode) children.get(2);
 		whileBlock = children.get(4).getChildren().get(1);
-		nextCommand = whileController;
+		
 	}
 
 	@Override
@@ -32,14 +32,14 @@ public class WhileNode extends Node {
 	}
 
 	@Override
-	protected Node findNextInstruction() {
-		if (nextCommand == whileController) {
+	protected Node findNextInstruction(MyThread t) {
+		if (nextCommands.get(t.getID()) == whileController) {
 			if (intToBoolean((int) whileController.getResult())) {
 				return whileBlock;
 			} else {
 				return null;
 			}
-		} else if (nextCommand == whileBlock) {
+		} else if (nextCommands.get(t.getID()) == whileBlock) {
 			return whileController;
 		}
 		return null;

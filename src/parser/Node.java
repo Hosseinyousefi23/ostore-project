@@ -1,14 +1,15 @@
 package parser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import scheduler.MyThread;
 
 public class Node {
 	protected ParseTree tree;
-	protected Node parrent;
+	protected Node parent;
 	protected ArrayList<Node> children;
-	protected Node nextCommand = children.get(0);
+	protected HashMap<Integer, Node> nextCommands;
 	protected String name;
 	protected String content;
 	protected boolean isDone = false;
@@ -17,6 +18,7 @@ public class Node {
 		children = new ArrayList<Node>();
 		this.name = name;
 		this.tree = tree;
+		nextCommands = new HashMap<Integer, Node>();
 	}
 
 	public ArrayList<Node> getChildren() {
@@ -28,11 +30,11 @@ public class Node {
 	}
 
 	public Node getParrent() {
-		return parrent;
+		return parent;
 	}
 
 	public void setParrent(Node parrent) {
-		this.parrent = parrent;
+		this.parent = parrent;
 	}
 
 	public String getName() {
@@ -48,9 +50,9 @@ public class Node {
 		return this.name;
 	}
 
-	public void execute(MyThread thread) {
+	public void execute(MyThread t) {
 		for (Node n : children) {
-			n.execute(thread);
+			n.execute(t);
 		}
 	}
 
@@ -79,23 +81,38 @@ public class Node {
 		isDone = true;
 	}
 
-	protected Node findNextInstruction() {
-		int index = parrent.children.indexOf(nextCommand);
-		if (index + 1 < parrent.children.size()) {
-			return parrent.children.get(index + 1);
+	protected Node findNextInstruction(MyThread t) {
+		int index = parent.children.indexOf(nextCommands.get(t.getID()));
+		if (index + 1 < parent.children.size()) {
+			return parent.children.get(index + 1);
 		}
 		return null;
 	}
 
 	public void executeInstruction(MyThread t) {
-		nextCommand.executeInstruction(t);
-		if (nextCommand.isDone()) {
-			nextCommand = findNextInstruction();
-			if (nextCommand == null) {
+		nextCommands.get(t.getID()).executeInstruction(t);
+		if (nextCommands.get(t.getID()).isDone()) {
+			nextCommands.replace(t.getID(), findNextInstruction(t));
+			if (nextCommands.get(t.getID()) == null) {
 				done();
 			}
 		}
 
 	}
 
+	public void initializeNewThread(int parentTid, int childTid) {
+		if (nextCommands.containsKey(parentTid)) {
+			Node next = nextCommands.get(parentTid);
+			nextCommands.put(childTid, next);
+			for (Node n : children) {
+				n.initializeNewThread(parentTid, childTid);
+			}
+		}
+	}
+
+	public void initializeThread(int tid) {
+		for (Node child : children) {
+			child.initializeThread(tid);
+		}
+	}
 }

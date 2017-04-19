@@ -16,7 +16,6 @@ public class IfNode extends Node {
 		if (hasElse()) {
 			elseBlock = children.get(6).getChildren().get(1);
 		}
-		nextCommand = expression;
 	}
 
 	@Override
@@ -34,14 +33,15 @@ public class IfNode extends Node {
 	}
 
 	@Override
-	protected Node findNextInstruction() {
-		if (nextCommand == expression) {
+	protected Node findNextInstruction(MyThread t) {
+		if (nextCommands.get(t.getID()) == expression) {
 			if (intToBoolean((int) expression.getResult())) {
 				return ifBlock;
 			} else {
 				return elseBlock;
 			}
-		} else if (nextCommand == ifBlock || nextCommand == elseBlock) {
+		} else if (nextCommands.get(t.getID()) == ifBlock
+				|| nextCommands.get(t.getID()) == elseBlock) {
 			return null;
 		}
 		return null;
@@ -49,6 +49,12 @@ public class IfNode extends Node {
 
 	private boolean hasElse() {
 		return children.size() == 7;
+	}
+
+	@Override
+	public void initializeThread(int tid) {
+		super.initializeThread(tid);
+		nextCommands.put(tid, expression);
 	}
 
 }
