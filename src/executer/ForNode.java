@@ -6,29 +6,53 @@ import scheduler.MyThread;
 
 public class ForNode extends Node {
 
+	private AssignmentNode firstAssign;
+	private ExprNode controller;
+	private AssignmentNode secondAssign;
+	private Node block;
+
 	public ForNode(String name, ParseTree tree) {
-		super(name,tree);
+		super(name, tree);
+		firstAssign = (AssignmentNode) children.get(2);
+		secondAssign = (AssignmentNode) children.get(6);
+		controller = (ExprNode) children.get(4);
+		block = children.get(8).getChildren().get(1);
+		nextCommand = firstAssign;
 	}
 
 	@Override
 	public void execute(MyThread t) {
-		AssignmentNode firstAssign = (AssignmentNode) children.get(2);
-		AssignmentNode secondAssign = (AssignmentNode) children.get(6);
-		ExprNode Controller = (ExprNode) children.get(4);
-		Node Block = children.get(8).getChildren().get(1);
 
 		firstAssign.execute(t);
-		Controller.execute(t);
-		int control = (int) Controller.getResult();
+		controller.execute(t);
+		int control = (int) controller.getResult();
 
 		while (intToBoolean(control)) {
-			Block.execute(t);
+			block.execute(t);
 			secondAssign.execute(t);
-			Controller.execute(t);
-			control = (int) Controller.getResult();
+			controller.execute(t);
+			control = (int) controller.getResult();
 
 		}
 
+	}
+
+	@Override
+	protected Node findNextInstruction() {
+		if (nextCommand == firstAssign) {
+			return controller;
+		} else if (nextCommand == secondAssign) {
+			return controller;
+		} else if (nextCommand == controller) {
+			if (intToBoolean((int) controller.getResult())) {
+				return block;
+			} else {
+				return null;
+			}
+		} else if (nextCommand == block) {
+			return secondAssign;
+		}
+		return null;
 	}
 
 }

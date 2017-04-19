@@ -15,4 +15,10 @@ public class QuitNode extends Node {
 	public void execute(MyThread t) {
 		UserInterface.quited = true;
 	}
+
+	@Override
+	public void executeInstruction(MyThread t) {
+		execute(t);
+		done();
+	}
 }

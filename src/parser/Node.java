@@ -8,9 +8,10 @@ public class Node {
 	protected ParseTree tree;
 	protected Node parrent;
 	protected ArrayList<Node> children;
+	protected Node nextCommand = children.get(0);
 	protected String name;
 	protected String content;
-	protected boolean visited = false;
+	protected boolean isDone = false;
 
 	public Node(String name, ParseTree tree) {
 		children = new ArrayList<Node>();
@@ -68,6 +69,33 @@ public class Node {
 
 	protected boolean intToBoolean(int i) {
 		return i != 0;
+	}
+
+	public boolean isDone() {
+		return isDone;
+	}
+
+	protected void done() {
+		isDone = true;
+	}
+
+	protected Node findNextInstruction() {
+		int index = parrent.children.indexOf(nextCommand);
+		if (index + 1 < parrent.children.size()) {
+			return parrent.children.get(index + 1);
+		}
+		return null;
+	}
+
+	public void executeInstruction(MyThread t) {
+		nextCommand.executeInstruction(t);
+		if (nextCommand.isDone()) {
+			nextCommand = findNextInstruction();
+			if (nextCommand == null) {
+				done();
+			}
+		}
+
 	}
 
 }

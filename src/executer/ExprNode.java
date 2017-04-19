@@ -54,8 +54,7 @@ public class ExprNode extends Node {
 					break;
 
 				case "|":
-					result = (int) firstResult + (int) secondResult
-							- (int) firstResult * (int) secondResult;
+					result = (int) firstResult + (int) secondResult - (int) firstResult * (int) secondResult;
 					break;
 
 				case "&":
@@ -63,8 +62,7 @@ public class ExprNode extends Node {
 					break;
 
 				case "^":
-					result = (int) Math.pow((int) firstResult,
-							(int) secondResult);
+					result = (int) Math.pow((int) firstResult, (int) secondResult);
 					break;
 
 				case "<":
@@ -140,8 +138,7 @@ public class ExprNode extends Node {
 			int firstindexResult = (int) firstIndex.getResult();
 			int secondindexResult = (int) secondIndex.getResult();
 			String StringIndexResult = (String) StringIndex.getResult();
-			result = StringIndexResult.substring(firstindexResult,
-					secondindexResult);
+			result = StringIndexResult.substring(firstindexResult, secondindexResult);
 
 			break;
 
@@ -179,6 +176,12 @@ public class ExprNode extends Node {
 
 	public Object getResult() {
 		return result;
+	}
+
+	@Override
+	public void executeInstruction(MyThread t) {
+		execute(t);
+		done();
 	}
 
 }

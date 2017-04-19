@@ -56,8 +56,9 @@ public class Scheduler {
 	private void collect(Process p) {
 		runningQueue.remove(p);
 		readyQueue.put(p.getID(), p);
-
 	}
+	
+
 
 	private boolean timeToCollect(Process p) {
 		return runningQueue.containsValue(p) && timeUp(p);

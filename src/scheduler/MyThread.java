@@ -13,7 +13,7 @@ public class MyThread {
 	private String code;
 	private int programCounter = 0;
 	private ParseTree programTree;
-	private Node nextInstruction;
+
 	private ArrayList<Process> waitingQueue;
 	private ArrayList<HashMap<String, Object>> localVars;
 	private Process parent;
@@ -58,12 +58,11 @@ public class MyThread {
 	}
 
 	public void executeNextInstruction() {
-		// TODO Auto-generated method stub
-
-	}
-	
-	private void findNextInstruction(){
-		
+		programTree.getRoot().executeInstruction(this);
+		programCounter++;
+		if (programTree.getRoot().isDone()) {
+			parent.finish(this);
+		}
 	}
 
 }

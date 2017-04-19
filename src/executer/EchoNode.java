@@ -16,7 +16,12 @@ public class EchoNode extends Node {
 		echoNode.execute(t);
 		Object resultecho = echoNode.getResult();
 		System.out.println(resultecho);
+	}
 
+	@Override
+	public void executeInstruction(MyThread t) {
+		execute(t);
+		done();
 	}
 
 }

@@ -83,4 +83,8 @@ public class Process {
 		return runningThreads.get(tid);
 	}
 
+	public void finish(MyThread t) {
+		runningThreads.remove(t);
+	}
+
 }
