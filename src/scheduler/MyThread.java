@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import parser.ParseTree;
-import parser.Parser;
 
 public class MyThread {
 	private static int idGenerator = 1;
@@ -14,7 +13,7 @@ public class MyThread {
 	private ParseTree programTree;
 
 	private ArrayList<Process> waitingQueue;
-	private ArrayList<HashMap<String, Object>> localVars;
+	private HashMap<String, Object> localVars;
 	private Process process;
 
 	public static int getNewTid() {
@@ -26,7 +25,7 @@ public class MyThread {
 		setCode(code);
 		setParent(parent);
 		waitingQueue = new ArrayList<Process>();
-		localVars = new ArrayList<HashMap<String, Object>>();
+		localVars = new HashMap<String, Object>();
 		this.programTree = programTree;
 	}
 
@@ -74,4 +73,7 @@ public class MyThread {
 		return programCounter;
 	}
 
+	public void addLocalVar(String name, Object value) {
+		localVars.put(name, value);
+	}
 }
