@@ -12,6 +12,11 @@ public class CreateProcessNode extends Node {
 
 	public CreateProcessNode(String name, ParseTree tree) {
 		super(name, tree);
+
+	}
+
+	@Override
+	public void init() {
 		variable = children.get(2).getChildren().get(0).getChildren().get(0);
 	}
 
@@ -19,7 +24,7 @@ public class CreateProcessNode extends Node {
 	public void execute(MyThread t) {
 		int pid = Process.getNewPid();
 		Scheduler sc = t.getProcess().getScheduler();
-		Process child = new Process(pid, t.getProgramTree(), t.getProcess(), sc, t.getID());
+		Process child = new Process(pid, t.getProgramTree(), t.getProcess(), sc, t);
 		sc.addToReadyQueue(child);
 		sc.addProcess(child);
 		t.getProcess().addChildProcess(child);

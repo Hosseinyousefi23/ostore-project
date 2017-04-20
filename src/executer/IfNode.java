@@ -11,6 +11,10 @@ public class IfNode extends Node {
 
 	public IfNode(String name, ParseTree tree) {
 		super(name, tree);
+	}
+
+	@Override
+	public void init() {
 		expression = (ExprNode) children.get(2);
 		ifBlock = children.get(4).getChildren().get(1);
 		if (hasElse()) {
@@ -40,8 +44,7 @@ public class IfNode extends Node {
 			} else {
 				return elseBlock;
 			}
-		} else if (nextCommands.get(t.getID()) == ifBlock
-				|| nextCommands.get(t.getID()) == elseBlock) {
+		} else if (nextCommands.get(t.getID()) == ifBlock || nextCommands.get(t.getID()) == elseBlock) {
 			return null;
 		}
 		return null;

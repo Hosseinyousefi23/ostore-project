@@ -8,10 +8,8 @@ import scheduler.MyThread;
 
 public class Executer {
 	private Parser parser;
-	public static HashMap<String, Object> variables;
 
 	public Executer() {
-		variables = new HashMap<String, Object>();
 		parser = new Parser();
 	}
 

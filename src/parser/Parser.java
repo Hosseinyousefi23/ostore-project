@@ -52,6 +52,7 @@ public class Parser {
 		Node root = new Node("<program>", tree);
 		buildTree("<program>", root);
 		tree.setRoot(root);
+		tree.init();
 		return tree;
 	}
 
@@ -70,17 +71,14 @@ public class Parser {
 				} else {
 					for (String childElement : rule) {
 						if (isFakeElement(childElement)) {
-							String childElement1 = childElement.substring(1,
-									childElement.length() - 1);
+							String childElement1 = childElement.substring(1, childElement.length() - 1);
 							if (buildTree(childElement1, root)) {
 								// System.out.println(childElement1);
 								virgin = false;
 								continue;
 							} else {
 								if (!virgin) {
-									throw new RuntimeException(
-											"UnexpectedToken at line  = \""
-													+ token + "\"");
+									throw new RuntimeException("UnexpectedToken at line  = \"" + token + "\"");
 								}
 								continue outerloop;
 							}
@@ -93,9 +91,7 @@ public class Parser {
 								continue;
 							} else {
 								if (!virgin) {
-									throw new RuntimeException(
-											"UnexpectedToken at line "
-													+ " = \"" + token + "\"");
+									throw new RuntimeException("UnexpectedToken at line " + " = \"" + token + "\"");
 								}
 								continue outerloop;
 							}
@@ -109,8 +105,7 @@ public class Parser {
 		} else {
 			if (token.contains(" ")) {
 				String tokenValue = token.substring(0, token.indexOf(" "));
-				String content = token.substring(token.indexOf(" ") + 1,
-						token.length());
+				String content = token.substring(token.indexOf(" ") + 1, token.length());
 				if (tokenValue.equals(element)) {
 					token = scanner.nextToken();
 					root.setContent(content);
@@ -194,10 +189,8 @@ public class Parser {
 			ArrayList<ArrayList<String>> elementRules = rules.get(key);
 			for (ArrayList<String> rule : elementRules) {
 				for (int i = 0; i < rule.size(); i++) {
-					if (rule.get(i).equals(element)
-							|| rule.get(i).equals("<" + element + ">")) {
-						if (i == rule.size() - 1
-								&& !followInprocess.contains(key)) {
+					if (rule.get(i).equals(element) || rule.get(i).equals("<" + element + ">")) {
+						if (i == rule.size() - 1 && !followInprocess.contains(key)) {
 							ret = union(ret, follow(key));
 						} else if (!followInprocess.contains(key)) {
 							ret = union(ret, first(rule.get(i + 1)));
@@ -246,8 +239,7 @@ public class Parser {
 		return false;
 	}
 
-	private ArrayList<String> union(ArrayList<String> array1,
-			ArrayList<String> array2) {
+	private ArrayList<String> union(ArrayList<String> array1, ArrayList<String> array2) {
 		ArrayList<String> ret = new ArrayList<String>();
 		for (String element : array1) {
 			if (!ret.contains(element)) {
@@ -268,8 +260,7 @@ public class Parser {
 
 	private void extractRules() {
 		try {
-			java.util.Scanner read = new java.util.Scanner(new File(
-					"grammar.txt"));
+			java.util.Scanner read = new java.util.Scanner(new File("grammar.txt"));
 			String grammar = read.useDelimiter("\\Z").next();
 			String[] rulesString = grammar.split("\n");
 			for (String s : rulesString) {

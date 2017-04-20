@@ -13,16 +13,18 @@ public class ForNode extends Node {
 
 	public ForNode(String name, ParseTree tree) {
 		super(name, tree);
+	}
+
+	@Override
+	public void init() {
 		firstAssign = (AssignmentNode) children.get(2);
 		secondAssign = (AssignmentNode) children.get(6);
 		controller = (ExprNode) children.get(4);
 		block = children.get(8).getChildren().get(1);
-
 	}
 
 	@Override
 	public void execute(MyThread t) {
-
 		firstAssign.execute(t);
 		controller.execute(t);
 		int control = (int) controller.getResult();
@@ -50,6 +52,8 @@ public class ForNode extends Node {
 				return null;
 			}
 		} else if (nextCommands.get(t.getID()) == block) {
+			block.getNextCommands().replace(t.getID(), block.getChildren().get(0));
+			block.setDone(false);
 			return secondAssign;
 		}
 		return null;

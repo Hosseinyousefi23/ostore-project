@@ -7,11 +7,16 @@ import scheduler.Scheduler;
 
 public class WaitForProcessNode extends Node {
 
-	private ExprNode processId = (ExprNode) children.get(2);
+	private ExprNode processId;
 
 	public WaitForProcessNode(String name, ParseTree tree) {
 		super(name, tree);
 
+	}
+
+	@Override
+	public void init() {
+		processId = (ExprNode) children.get(2);
 	}
 
 	@Override

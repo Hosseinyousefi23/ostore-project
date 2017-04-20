@@ -7,14 +7,20 @@ import scheduler.Scheduler;
 
 public class KillThreadNode extends Node {
 
-	private ExprNode threadId = (ExprNode) children.get(2);
+	private ExprNode threadId;
 
 	public KillThreadNode(String name, ParseTree tree) {
 		super(name, tree);
 	}
 
 	@Override
+	public void init() {
+		threadId = (ExprNode) children.get(2);
+	}
+
+	@Override
 	public void execute(MyThread t) {
+
 		threadId.execute(t);
 		Integer tid = (Integer) threadId.getResult();
 		Scheduler sc = t.getProcess().getScheduler();

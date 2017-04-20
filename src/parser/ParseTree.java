@@ -2,10 +2,16 @@ package parser;
 
 import java.util.HashMap;
 
+import scheduler.MyThread;
+
 public class ParseTree {
 
 	private Node root;
 	private HashMap<Integer, Integer> programCounters;
+
+	public ParseTree() {
+		programCounters = new HashMap<Integer, Integer>();
+	}
 
 	public Node getRoot() {
 		return root;
@@ -20,13 +26,17 @@ public class ParseTree {
 		root.initializeThread(tid);
 	}
 
-	public void addNewThread(int parentTid, int childTid) {
-		int parentPc = programCounters.get(parentTid);
-		programCounters.put(childTid, parentPc);
-		root.initializeNewThread(parentTid, childTid);
+	public void addNewThread(MyThread parent, MyThread child) {
+		int parentPc = programCounters.get(parent.getID());
+		programCounters.put(child.getID(), parentPc);
+		root.initializeNewThread(parent, child);
 	}
 
 	public int getPc(int parentTid) {
 		return programCounters.get(parentTid);
+	}
+
+	public void init() {
+		root.init();
 	}
 }

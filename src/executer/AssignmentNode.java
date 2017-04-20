@@ -17,11 +17,7 @@ public class AssignmentNode extends Node {
 		Node assignId = children.get(2);
 		assign.execute(t);
 		Object resultassign = assign.getResult();
-		if (Executer.variables.containsKey(assignId.getContent())) {
-			Executer.variables.replace(assignId.getContent(), resultassign);
-		} else {
-			Executer.variables.put(assignId.getContent(), resultassign);
-		}
+		t.getProcess().addGlobalVar(assignId.getContent(), resultassign);
 	}
 
 	@Override

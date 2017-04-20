@@ -7,10 +7,15 @@ import scheduler.Scheduler;
 
 public class ExecNode extends Node {
 
-	private ExprNode filePath = (ExprNode) children.get(2);
+	private ExprNode filePath;
 
 	public ExecNode(String name, ParseTree tree) {
 		super(name, tree);
+	}
+
+	@Override
+	public void init() {
+		filePath = (ExprNode) children.get(2);
 	}
 
 	@Override

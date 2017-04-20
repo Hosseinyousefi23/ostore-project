@@ -6,11 +6,16 @@ import scheduler.MyThread;
 
 public class SignalNode extends Node {
 
-	private Node sname = children.get(2);
+	private Node sname;
 
 	public SignalNode(String name, ParseTree tree) {
 		super(name, tree);
 
+	}
+
+	@Override
+	public void init() {
+		sname = children.get(2);
 	}
 
 	@Override

@@ -75,8 +75,8 @@ public class UserInterface {
 		try {
 			Scanner scan = new Scanner(new File(filePath));
 			String code = scan.useDelimiter("\\Z").next();
-			scheduler.start(code);
 			scan.close();
+			scheduler.start(code);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

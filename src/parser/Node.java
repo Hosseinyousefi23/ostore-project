@@ -21,6 +21,12 @@ public class Node {
 		nextCommands = new HashMap<Integer, Node>();
 	}
 
+	public void init() {
+		for (Node child : children) {
+			child.init();
+		}
+	}
+
 	public ArrayList<Node> getChildren() {
 		return children;
 	}
@@ -82,9 +88,9 @@ public class Node {
 	}
 
 	protected Node findNextInstruction(MyThread t) {
-		int index = parent.children.indexOf(nextCommands.get(t.getID()));
-		if (index + 1 < parent.children.size()) {
-			return parent.children.get(index + 1);
+		int index = children.indexOf(nextCommands.get(t.getID()));
+		if (index + 1 < children.size()) {
+			return children.get(index + 1);
 		}
 		return null;
 	}
@@ -100,19 +106,39 @@ public class Node {
 
 	}
 
-	public void initializeNewThread(int parentTid, int childTid) {
-		if (nextCommands.containsKey(parentTid)) {
-			Node next = nextCommands.get(parentTid);
-			nextCommands.put(childTid, next);
+	public void initializeNewThread(MyThread parent, MyThread child) {
+		if (nextCommands.containsKey(parent.getID())) {
+			Node next = nextCommands.get(parent.getID());
+			nextCommands.put(child.getID(), next);
+			if (nextCommands.get(child.getID()).getName().equals("<create_process>")
+					|| nextCommands.get(child.getID()).getName().equals("<create_thread>")) {
+				nextCommands.replace(child.getID(), findNextInstruction(child));
+			}
 			for (Node n : children) {
-				n.initializeNewThread(parentTid, childTid);
+				n.initializeNewThread(parent, child);
 			}
 		}
 	}
 
 	public void initializeThread(int tid) {
+		if (haveChildren()) {
+			nextCommands.put(tid, children.get(0));
+		}
 		for (Node child : children) {
 			child.initializeThread(tid);
 		}
 	}
+
+	private boolean haveChildren() {
+		return children.size() > 0;
+	}
+
+	public HashMap<Integer, Node> getNextCommands() {
+		return nextCommands;
+	}
+
+	public void setDone(boolean isDone) {
+		this.isDone = isDone;
+	}
+
 }

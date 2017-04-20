@@ -6,10 +6,15 @@ import scheduler.MyThread;
 
 public class KillProcessNode extends Node {
 
-	private ExprNode processId = (ExprNode) children.get(2);
+	private ExprNode processId;
 
 	public KillProcessNode(String name, ParseTree tree) {
 		super(name, tree);
+	}
+
+	@Override
+	public void init() {
+		processId = (ExprNode) children.get(2);
 	}
 
 	@Override

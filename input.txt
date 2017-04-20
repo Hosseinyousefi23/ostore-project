@@ -1,5 +1,7 @@
-set(a,2)
-echo(a)
-for(set(i,0); i < 5 ; set(i,i+1)){
-	echo(i)
+set(p,2)
+create_process(p)
+if (p == 0){
+	echo("im child")
+} else {
+	echo(concat("im father. pid= " , p))
 }

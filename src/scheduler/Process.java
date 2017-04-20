@@ -34,20 +34,20 @@ public class Process {
 		this.scheduler = scheduler;
 	}
 
-	public Process(int pid, ParseTree programTree, Process parent, Scheduler scheduler) {
-		init(pid, parent, scheduler);
+	public Process(int pid, ParseTree programTree, Process process, Scheduler scheduler) {
+		init(pid, process, scheduler);
 		int tid = MyThread.getNewTid();
 		mainThread = new MyThread(tid, programTree, this);
 		runThread(mainThread);
 
 	}
 
-	public Process(int pid, ParseTree programTree, Process parent, Scheduler scheduler, int parentTid) {
-		init(pid, parent, scheduler);
+	public Process(int pid, ParseTree programTree, Process process, Scheduler scheduler, MyThread parent) {
+		init(pid, process, scheduler);
 		int tid = MyThread.getNewTid();
-		int pc = programTree.getPc(parentTid);
+		int pc = programTree.getPc(parent.getID());
 		this.programCounter = pc;
-		mainThread = new MyThread(tid, programTree, pc, this, parentTid);
+		mainThread = new MyThread(tid, programTree, pc, this, parent);
 		addThread(mainThread);
 		runThread(mainThread);
 
@@ -64,9 +64,13 @@ public class Process {
 
 	private MyThread extractThreadToRun() {
 		Object[] keys = runningThreads.keySet().toArray();
-		int index = programCounter % runningThreads.size();
-		int tid = (Integer) keys[index];
-		return runningThreads.get(tid);
+		MyThread candidate = runningThreads.get(keys[0]);
+		for (Object key : keys) {
+			if (runningThreads.get(key).waitTime() > candidate.waitTime()) {
+				candidate = runningThreads.get(key);
+			}
+		}
+		return candidate;
 	}
 
 	public void executeNextInstruction() {
@@ -100,10 +104,6 @@ public class Process {
 		return programCounter;
 	}
 
-	public void finish(MyThread t) {
-		runningThreads.remove(t);
-	}
-
 	public Scheduler getScheduler() {
 		return scheduler;
 	}
@@ -132,17 +132,29 @@ public class Process {
 	}
 
 	public void removeThread(MyThread t) {
-		allThreads.remove(t);
-		runningThreads.remove(t);
+		allThreads.remove(t.getID());
+		runningThreads.remove(t.getID());
+
+		if (isDone()) {
+			scheduler.killProcess(this.getID());
+		}
 
 	}
 
+	private boolean isDone() {
+		return allThreads.size() == 0;
+	}
+
 	public void stopThread(MyThread t) {
-		runningThreads.remove(t);
+		runningThreads.remove(t.getID());
 
 	}
 
 	public void addWaiter(MyThread t) {
 		waiters.add(t);
+	}
+
+	public void addGlobalVar(String name, Object value) {
+		globalVars.put(name, value);
 	}
 }

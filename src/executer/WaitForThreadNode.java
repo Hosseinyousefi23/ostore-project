@@ -7,11 +7,16 @@ import scheduler.Scheduler;
 
 public class WaitForThreadNode extends Node {
 
-	private ExprNode threadId = (ExprNode) children.get(2);
+	private ExprNode threadId;
 
 	public WaitForThreadNode(String name, ParseTree tree) {
 		super(name, tree);
 		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public void init() {
+		threadId = (ExprNode) children.get(2);
 	}
 
 	@Override

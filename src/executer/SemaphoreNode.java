@@ -5,8 +5,8 @@ import parser.ParseTree;
 import scheduler.MyThread;
 
 public class SemaphoreNode extends Node {
-	private Node sname = children.get(2);
-	private ExprNode svalue = (ExprNode) children.get(3);
+	private Node sname;
+	private ExprNode svalue;
 
 	public SemaphoreNode(String name, ParseTree tree) {
 		super(name, tree);
@@ -14,7 +14,14 @@ public class SemaphoreNode extends Node {
 	}
 
 	@Override
+	public void init() {
+		sname = children.get(2);
+		svalue = (ExprNode) children.get(3);
+	}
+
+	@Override
 	public void execute(MyThread t) {
+
 		String name = sname.getContent();
 		svalue.execute(t);
 		Integer value = (Integer) svalue.getResult();

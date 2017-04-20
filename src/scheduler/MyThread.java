@@ -21,24 +21,24 @@ public class MyThread {
 		return idGenerator++;
 	}
 
-	private void init(int tid, ParseTree programTree, Process parent) {
+	private void init(int tid, ParseTree programTree, Process process) {
 		this.id = tid;
 		setCode(code);
-		setParent(parent);
+		setParent(process);
 		waiters = new ArrayList<MyThread>();
 		localVars = new HashMap<String, Object>();
 		this.programTree = programTree;
 	}
 
-	public MyThread(int tid, ParseTree programTree, Process parent) {
-		init(tid, programTree, parent);
-		programTree.addThread(tid);
+	public MyThread(int tid, ParseTree programTree, Process process) {
+		init(tid, programTree, process);
+		this.programTree.addThread(tid);
 	}
 
-	public MyThread(int tid, ParseTree programTree, int pc, Process parent, int parentTid) {
-		init(tid, programTree, parent);
+	public MyThread(int tid, ParseTree programTree, int pc, Process process, MyThread parent) {
+		init(tid, programTree, process);
 		this.programCounter = pc;
-		programTree.addNewThread(parentTid, tid);
+		programTree.addNewThread(parent, this);
 	}
 
 	public void setParent(Process process) {
@@ -62,7 +62,7 @@ public class MyThread {
 		programTree.getRoot().executeInstruction(this);
 		programCounter++;
 		if (programTree.getRoot().isDone()) {
-			process.finish(this);
+			process.getScheduler().killThread(this);
 		}
 
 	}

@@ -2,6 +2,7 @@ package scheduler;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -43,10 +44,11 @@ public class Scheduler {
 		readyQueue.put(pid, init);
 		int runningCounter = 0;
 		while (!isDone()) {
-			if (runningCounter++ % 4 == 0) {
-				shortTermSchedule();
-			}
+			// if (runningCounter++ % 4 == 0) {
+			shortTermSchedule();
+			// }
 			executeRunningQueue();
+			runningCounter++;
 		}
 	}
 
@@ -64,7 +66,7 @@ public class Scheduler {
 	}
 
 	private void collect(Process p) {
-		runningQueue.remove(p);
+		runningQueue.remove(p.getID());
 		readyQueue.put(p.getID(), p);
 	}
 
@@ -94,8 +96,14 @@ public class Scheduler {
 		}
 		if (readyProcessExists()) {
 			Process p = extractProcessToRun();
+			removeFromReadyQueue(p);
 			addToRunningQueue(p);
 		}
+	}
+
+	private void removeFromReadyQueue(Process p) {
+		readyQueue.remove(p.getID());
+
 	}
 
 	private void addToRunningQueue(Process p) {
@@ -184,9 +192,9 @@ public class Scheduler {
 		for (MyThread waiter : p.getWaiters()) {
 			waiter.getProcess().runThread(waiter);
 		}
-		allProcesses.remove(p);
-		runningQueue.remove(p);
-		readyQueue.remove(p);
+		allProcesses.remove(p.getID());
+		runningQueue.remove(p.getID());
+		readyQueue.remove(p.getID());
 		p = null;
 	}
 
