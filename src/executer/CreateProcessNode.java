@@ -19,9 +19,9 @@ public class CreateProcessNode extends Node {
 	public void execute(MyThread t) {
 		int pid = Process.getNewPid();
 		Scheduler sc = t.getProcess().getScheduler();
-		Process child = new Process(pid, t.getProgramTree(), t.getProcess(),
-				sc, t.getID());
+		Process child = new Process(pid, t.getProgramTree(), t.getProcess(), sc, t.getID());
 		sc.addToReadyQueue(child);
+		sc.addProcess(child);
 		t.getProcess().addChildProcess(child);
 		String varname = variable.getContent();
 		t.addLocalVar(varname, child.getMainThread().getID());

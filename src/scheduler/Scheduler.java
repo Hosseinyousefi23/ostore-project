@@ -1,7 +1,10 @@
 package scheduler;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Scanner;
 
 import parser.ParseTree;
 import parser.Parser;
@@ -17,10 +20,12 @@ public class Scheduler {
 	private HashMap<Integer, Process> runningQueue;
 	private HashMap<String, Semaphore> semaphores;
 	private Executer exe;
+	private HashMap<Integer, Process> allProcesses;
 
 	public Scheduler(int cores, int schedulTime) {
 		readyQueue = new HashMap<Integer, Process>();
 		runningQueue = new HashMap<Integer, Process>();
+		allProcesses = new HashMap<Integer, Process>();
 		setCores(cores);
 		setSchedulTime(schedulTime);
 		exe = new Executer();
@@ -34,6 +39,7 @@ public class Scheduler {
 		Parser parser = new Parser();
 		ParseTree programTree = parser.parse(code);
 		Process init = new Process(pid, programTree, null, this);
+		addProcess(init);
 		readyQueue.put(pid, init);
 		int runningCounter = 0;
 		while (!isDone()) {
@@ -148,5 +154,84 @@ public class Scheduler {
 
 	public int getWaitingTime(Process p) {
 		return clock - p.getStartedReadyOn();
+	}
+
+	public void exec(Process process, String filePath) {
+		try {
+			Scanner scan = new Scanner(new File(filePath));
+			String code = scan.useDelimiter("\\Z").next();
+			scan.close();
+			Parser p = new Parser();
+			ParseTree tree = p.parse(code);
+			int pid = process.getID();
+			Process parent = process.getParent();
+			process = new Process(pid, tree, parent, this);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public void addProcess(Process p) {
+		allProcesses.put(p.getID(), p);
+	}
+
+	public void killProcess(Integer id) {
+		Process p = allProcesses.get(id);
+		for (MyThread t : p.getAllThreads().values()) {
+			killThread(t);
+		}
+		for (MyThread waiter : p.getWaiters()) {
+			waiter.getProcess().runThread(waiter);
+		}
+		allProcesses.remove(p);
+		runningQueue.remove(p);
+		readyQueue.remove(p);
+		p = null;
+	}
+
+	public void killThread(MyThread t) {
+
+		for (MyThread thread : t.getWaiters()) {
+			thread.getProcess().runThread(thread);
+		}
+		for (Process process : allProcesses.values()) {
+			process.getWaiters().remove(t);
+		}
+
+		for (Semaphore s : semaphores.values()) {
+			s.getWaiters().remove(t);
+		}
+
+		t.getProcess().removeThread(t);
+		t = null;
+
+	}
+
+	public Process getProcess(Integer pid) {
+		return allProcesses.get(pid);
+	}
+
+	public MyThread getThread(Integer tid) {
+		for (Process p : allProcesses.values()) {
+			if (p.getAllThreads().containsKey(tid)) {
+				return p.getAllThreads().get(tid);
+			}
+		}
+		return null;
+	}
+
+	public void addSemaphore(String name, Integer value) {
+		semaphores.put(name, new Semaphore(value));
+
+	}
+
+	public void signal(String name) {
+		Semaphore s = semaphores.get(name);
+		s.signal();
+	}
+
+	public void waitSemaphore(MyThread t, String name) {
+		semaphores.get(name).Wait(t);
 	}
 }

@@ -11,8 +11,9 @@ public class MyThread {
 	private String code;
 	private int programCounter;
 	private ParseTree programTree;
-
-	private ArrayList<Process> waitingQueue;
+	private String status;
+	private int lastRun;
+	private ArrayList<MyThread> waiters;
 	private HashMap<String, Object> localVars;
 	private Process process;
 
@@ -24,7 +25,7 @@ public class MyThread {
 		this.id = tid;
 		setCode(code);
 		setParent(parent);
-		waitingQueue = new ArrayList<Process>();
+		waiters = new ArrayList<MyThread>();
 		localVars = new HashMap<String, Object>();
 		this.programTree = programTree;
 	}
@@ -34,8 +35,7 @@ public class MyThread {
 		programTree.addThread(tid);
 	}
 
-	public MyThread(int tid, ParseTree programTree, int pc, Process parent,
-			int parentTid) {
+	public MyThread(int tid, ParseTree programTree, int pc, Process parent, int parentTid) {
 		init(tid, programTree, parent);
 		this.programCounter = pc;
 		programTree.addNewThread(parentTid, tid);
@@ -58,11 +58,13 @@ public class MyThread {
 	}
 
 	public void executeNextInstruction() {
+		lastRun = process.getScheduler().clock;
 		programTree.getRoot().executeInstruction(this);
 		programCounter++;
 		if (programTree.getRoot().isDone()) {
 			process.finish(this);
 		}
+
 	}
 
 	public ParseTree getProgramTree() {
@@ -75,5 +77,32 @@ public class MyThread {
 
 	public void addLocalVar(String name, Object value) {
 		localVars.put(name, value);
+	}
+
+	public Object getLocalVar(String varname) {
+		if (localVars.containsKey(varname)) {
+			return localVars.get(varname);
+		}
+		return null;
+	}
+
+	public ArrayList<MyThread> getWaiters() {
+		return waiters;
+	}
+
+	public int waitTime() {
+		return process.getScheduler().clock - lastRun;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void addWaiter(MyThread t) {
+		waiters.add(t);
 	}
 }

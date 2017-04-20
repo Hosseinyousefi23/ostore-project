@@ -12,7 +12,7 @@ public class PrintThreadInfoNode extends Node {
 	}
 
 	public void execute(MyThread t) {
-		System.out.println("thread_id: " + t.getID() + ", pid; ");
-		System.out.println("");
+		System.out.println("thread_id: " + t.getID() + ", pid: " + t.getProcess().getID());
+		System.out.println("clock: " + t.getPc() + ", wait: " + t.waitTime() + ", status: " + t.getStatus());
 	}
 }

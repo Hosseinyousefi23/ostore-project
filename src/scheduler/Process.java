@@ -10,11 +10,11 @@ public class Process {
 	private int id;
 	private int startedReadyOn;
 	private int programCounter = 0;
+	private HashMap<Integer, MyThread> allThreads;
 	private HashMap<Integer, MyThread> runningThreads;
-	private HashMap<Integer, MyThread> waitingThreads;
 	private MyThread mainThread;
-	private ArrayList<HashMap<String, Object>> globalVars;
-	private ArrayList<Process> waitingQueue;
+	private HashMap<String, Object> globalVars;
+	private ArrayList<MyThread> waiters;
 	private ArrayList<Process> children;
 	private Process parent;
 	private Scheduler scheduler;
@@ -25,17 +25,16 @@ public class Process {
 
 	private void init(int pid, Process parent, Scheduler scheduler) {
 		this.id = pid;
+		allThreads = new HashMap<Integer, MyThread>();
 		runningThreads = new HashMap<Integer, MyThread>();
-		waitingThreads = new HashMap<Integer, MyThread>();
-		globalVars = new ArrayList<HashMap<String, Object>>();
-		waitingQueue = new ArrayList<Process>();
+		globalVars = new HashMap<String, Object>();
+		waiters = new ArrayList<MyThread>();
 		children = new ArrayList<Process>();
 		this.parent = parent;
 		this.scheduler = scheduler;
 	}
 
-	public Process(int pid, ParseTree programTree, Process parent,
-			Scheduler scheduler) {
+	public Process(int pid, ParseTree programTree, Process parent, Scheduler scheduler) {
 		init(pid, parent, scheduler);
 		int tid = MyThread.getNewTid();
 		mainThread = new MyThread(tid, programTree, this);
@@ -43,19 +42,24 @@ public class Process {
 
 	}
 
-	public Process(int pid, ParseTree programTree, Process parent,
-			Scheduler scheduler, int parentTid) {
+	public Process(int pid, ParseTree programTree, Process parent, Scheduler scheduler, int parentTid) {
 		init(pid, parent, scheduler);
 		int tid = MyThread.getNewTid();
 		int pc = programTree.getPc(parentTid);
 		this.programCounter = pc;
 		mainThread = new MyThread(tid, programTree, pc, this, parentTid);
+		addThread(mainThread);
 		runThread(mainThread);
 
 	}
 
+	public void addThread(MyThread t) {
+		allThreads.put(t.getID(), t);
+	}
+
 	public void runThread(MyThread t) {
 		runningThreads.put(t.getID(), t);
+		t.setStatus("running");
 	}
 
 	private MyThread extractThreadToRun() {
@@ -77,7 +81,7 @@ public class Process {
 	}
 
 	public int getThreadsSize() {
-		return runningThreads.size() + waitingThreads.size();
+		return allThreads.size();
 	}
 
 	public MyThread getMainThread() {
@@ -108,4 +112,37 @@ public class Process {
 		children.add(child);
 	}
 
+	public Object getGlobalVar(String varname) {
+		if (globalVars.containsKey(varname)) {
+			return globalVars.get(varname);
+		}
+		return null;
+	}
+
+	public Process getParent() {
+		return parent;
+	}
+
+	public ArrayList<MyThread> getWaiters() {
+		return waiters;
+	}
+
+	public HashMap<Integer, MyThread> getAllThreads() {
+		return allThreads;
+	}
+
+	public void removeThread(MyThread t) {
+		allThreads.remove(t);
+		runningThreads.remove(t);
+
+	}
+
+	public void stopThread(MyThread t) {
+		runningThreads.remove(t);
+
+	}
+
+	public void addWaiter(MyThread t) {
+		waiters.add(t);
+	}
 }

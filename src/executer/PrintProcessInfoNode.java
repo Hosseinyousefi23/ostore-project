@@ -12,9 +12,9 @@ public class PrintProcessInfoNode extends Node {
 	}
 
 	@Override
-	public void execute(MyThread thread) {
-		System.out.println("pid: " + thread.getProcess().getID());
-		System.out.println("threads: " + thread.getProcess().getThreadsSize());
+	public void execute(MyThread t) {
+		System.out.println("pid: " + t.getProcess().getID());
+		System.out.println("threads: " + t.getProcess().getThreadsSize());
 	}
 
 }
