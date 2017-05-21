@@ -32,7 +32,7 @@ public class CreateThreadNode extends Node {
 	@Override
 	public void executeInstruction(MyThread t) {
 		execute(t);
-		done();
+		done(t.getID());
 	}
 
 }

@@ -43,19 +43,20 @@ public class Scanner {
 		}
 		return true;
 	}
-	
+
 	private boolean devidable(char c) {
-		return ((c == ';') || (c == ' ') || (c == '\t') || (c == '\n') || (c == ',') || (c == '(') || (c == ')') || (c == '+')
-				|| (c == '%') ||(c == '^') ||(c == '*') ||(c == '/') || (c == '-') || (c == '|') || (c == '&') ||(c == '!') || (c == '%') || (c == '!') || (c == '{') || (c == '}')
-				|| (c == '<') || (c == '>'));
+		return ((c == ';') || (c == ' ') || (c == '\t') || (c == '\n') || (c == ',') || (c == '(') || (c == ')')
+				|| (c == '+') || (c == '%') || (c == '^') || (c == '*') || (c == '/') || (c == '-') || (c == '|')
+				|| (c == '&') || (c == '!') || (c == '%') || (c == '!') || (c == '{') || (c == '}') || (c == '<')
+				|| (c == '>'));
 	}
-	
+
 	private void addToken(String meanedWord) {
 		if (!(meanedWord.equals("\t") || meanedWord.equals(" ") || meanedWord.equals(""))) {
 			token.add(meanedWord);
 		}
 	}
-	
+
 	public String nextToken() {
 		String s = "";
 		if (counter >= token.size()) {
@@ -63,7 +64,7 @@ public class Scanner {
 		} else {
 			s = token.get(counter++);
 		}
-	
+
 		return s;
 	}
 
@@ -71,9 +72,9 @@ public class Scanner {
 		token = new ArrayList<String>();
 		counter = 0;
 		// code = code.toUpperCase();
-		
+
 		this.code = code;
-//		code = code.replace(";", " ");
+		// code = code.replace(";", " ");
 		initMeaningful();
 		String word = "";
 		String meanedWord = "";
@@ -86,7 +87,7 @@ public class Scanner {
 				if (i < s.length() - 1) {
 					d = s.charAt(i + 1);
 				}
-				if (!devidable(c)&&!devidable2(c, d)) {
+				if (!devidable(c) && !devidable2(c, d)) {
 					word += s.charAt(i);
 					if (isMeaningful(word)) {
 						meanedWord = getMeaning(word);
@@ -95,23 +96,23 @@ public class Scanner {
 						word = "";
 						meanedWord = "";
 					}
-					
+
 				} else if (devidable2(c, d)) {
 					addToken(c + "" + d);
 					i++;
 				} else {
 					if (isNumber(word)) {
 						addToken("INT_LITERAL " + word);
-//						setMeaningful(word);
+						// setMeaningful(word);
 					} else if (isString(word)) {
 						addToken("STRING_LITERAL " + word);
-//						setMeaningful(word);
+						// setMeaningful(word);
 					} else {
 						if (isMeaningful(word)) {
 							addToken(meanedWord);
 						} else if (!isOpenString(word)) {
 							addIdToken("ID " + word);
-//							setMeaningful(word);
+							// setMeaningful(word);
 						}
 					}
 					if (isOpenString(word)) {
@@ -123,7 +124,7 @@ public class Scanner {
 						}
 					} else {
 						addToken(c + "");
-//						setMeaningful("" + c);
+						// setMeaningful("" + c);
 						word = "";
 						meanedWord = "";
 
@@ -145,10 +146,10 @@ public class Scanner {
 		}
 	}
 
-//	private void setMeaningful(String s) {
-//		if (!(s.equals("") || s.equals(" ")))
-//			meaningful.add(s);
-//	}
+	// private void setMeaningful(String s) {
+	// if (!(s.equals("") || s.equals(" ")))
+	// meaningful.add(s);
+	// }
 
 	private void initMeaningful() {
 		meaningful.add("SET");
@@ -171,6 +172,12 @@ public class Scanner {
 		meaningful.add("SEMAPHORE");
 		meaningful.add("WAIT");
 		meaningful.add("SIGNAL");
+		meaningful.add("GSET");
+		meaningful.add("CREATE_CHANNEL");
+		meaningful.add("WRITE");
+		meaningful.add("READ");
+		meaningful.add("SET_PRIORITY");
+
 	}
 
 	private boolean isMeaningful(String word) {

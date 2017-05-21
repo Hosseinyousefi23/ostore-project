@@ -17,6 +17,7 @@ public class CreateProcessNode extends Node {
 
 	@Override
 	public void init() {
+		super.init();
 		variable = children.get(2).getChildren().get(0).getChildren().get(0);
 	}
 
@@ -37,7 +38,7 @@ public class CreateProcessNode extends Node {
 	@Override
 	public void executeInstruction(MyThread t) {
 		execute(t);
-		done();
+		done(t.getID());
 	}
 
 }

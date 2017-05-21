@@ -17,6 +17,7 @@ public class ForNode extends Node {
 
 	@Override
 	public void init() {
+		super.init();
 		firstAssign = (AssignmentNode) children.get(2);
 		secondAssign = (AssignmentNode) children.get(6);
 		controller = (ExprNode) children.get(4);
@@ -53,7 +54,7 @@ public class ForNode extends Node {
 			}
 		} else if (nextCommands.get(t.getID()) == block) {
 			block.getNextCommands().replace(t.getID(), block.getChildren().get(0));
-			block.setDone(false);
+			block.setDone(false, t.getID());
 			return secondAssign;
 		}
 		return null;

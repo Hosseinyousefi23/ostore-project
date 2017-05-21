@@ -15,6 +15,7 @@ public class IfNode extends Node {
 
 	@Override
 	public void init() {
+		super.init();
 		expression = (ExprNode) children.get(2);
 		ifBlock = children.get(4).getChildren().get(1);
 		if (hasElse()) {

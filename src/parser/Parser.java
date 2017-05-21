@@ -6,24 +6,29 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import executer.AssignmentNode;
+import executer.CreateChannelNode;
 import executer.CreateProcessNode;
 import executer.CreateThreadNode;
 import executer.EchoNode;
 import executer.ExecNode;
 import executer.ExprNode;
 import executer.ForNode;
+import executer.GlobalAssignmentNode;
 import executer.IfNode;
 import executer.KillProcessNode;
 import executer.KillThreadNode;
 import executer.PrintProcessInfoNode;
 import executer.PrintThreadInfoNode;
 import executer.QuitNode;
+import executer.ReadChannelNode;
 import executer.SemaphoreNode;
+import executer.SetPriorityNode;
 import executer.SignalNode;
 import executer.WaitForProcessNode;
 import executer.WaitForThreadNode;
 import executer.WaitNode;
 import executer.WhileNode;
+import executer.WriteChannelNode;
 import scanner.Scanner;
 
 public class Parser {
@@ -166,6 +171,16 @@ public class Parser {
 			return new WaitNode(element, tree);
 		case "<signal>":
 			return new SignalNode(element, tree);
+		case "<global_assignment>":
+			return new GlobalAssignmentNode(element, tree);
+		case "<create_channel":
+			return new CreateChannelNode(element, tree);
+		case "<read>":
+			return new ReadChannelNode(element, tree);
+		case "<write>":
+			return new WriteChannelNode(element, tree);
+		case "<set_priority>":
+			return new SetPriorityNode(element, tree);
 		default:
 			return new Node(element, tree);
 

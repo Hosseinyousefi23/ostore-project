@@ -12,13 +12,14 @@ public class Node {
 	protected HashMap<Integer, Node> nextCommands;
 	protected String name;
 	protected String content;
-	protected boolean isDone = false;
+	protected HashMap<Integer, Boolean> isDone;;
 
 	public Node(String name, ParseTree tree) {
 		children = new ArrayList<Node>();
 		this.name = name;
 		this.tree = tree;
 		nextCommands = new HashMap<Integer, Node>();
+		isDone = new HashMap<Integer, Boolean>();
 	}
 
 	public void init() {
@@ -79,12 +80,12 @@ public class Node {
 		return i != 0;
 	}
 
-	public boolean isDone() {
-		return isDone;
+	public boolean isDone(int tid) {
+		return isDone.get(tid);
 	}
 
-	protected void done() {
-		isDone = true;
+	protected void done(int tid) {
+		isDone.put(tid, true);
 	}
 
 	protected Node findNextInstruction(MyThread t) {
@@ -96,11 +97,14 @@ public class Node {
 	}
 
 	public void executeInstruction(MyThread t) {
+		if (nextCommands.get(t.getID()) == null){
+			System.out.println();
+		}
 		nextCommands.get(t.getID()).executeInstruction(t);
-		if (nextCommands.get(t.getID()).isDone()) {
+		if (nextCommands.get(t.getID()).isDone(t.getID())) {
 			nextCommands.replace(t.getID(), findNextInstruction(t));
 			if (nextCommands.get(t.getID()) == null) {
-				done();
+				done(t.getID());
 			}
 		}
 
@@ -110,8 +114,12 @@ public class Node {
 		if (nextCommands.containsKey(parent.getID())) {
 			Node next = nextCommands.get(parent.getID());
 			nextCommands.put(child.getID(), next);
-			if (nextCommands.get(child.getID()).getName().equals("<create_process>")
-					|| nextCommands.get(child.getID()).getName().equals("<create_thread>")) {
+			Boolean done = isDone.get(parent.getID());
+			isDone.put(child.getID(), done);
+			if (nextCommands.get(child.getID()) != null
+					&& ("<create_process>".equals(nextCommands.get(child.getID()).getName())
+							|| "<create_thread>".equals(nextCommands.get(child.getID()).getName()))) {
+				nextCommands.get(child.getID()).isDone.put(child.getID(), true);
 				nextCommands.replace(child.getID(), findNextInstruction(child));
 			}
 			for (Node n : children) {
@@ -124,6 +132,7 @@ public class Node {
 		if (haveChildren()) {
 			nextCommands.put(tid, children.get(0));
 		}
+		isDone.put(tid, false);
 		for (Node child : children) {
 			child.initializeThread(tid);
 		}
@@ -137,8 +146,8 @@ public class Node {
 		return nextCommands;
 	}
 
-	public void setDone(boolean isDone) {
-		this.isDone = isDone;
+	public void setDone(boolean isDone, int tid) {
+		this.isDone.put(tid, isDone);
 	}
 
 }

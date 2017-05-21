@@ -1,8 +1,4 @@
-/executer/
-/newscanner/
-/parser/
 /scanner/
-/scheduler/
-/semaphore/
-/testscanner/
-/ui/
+/parser/
+/executer/
+/unittest/

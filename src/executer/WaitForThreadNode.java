@@ -26,12 +26,13 @@ public class WaitForThreadNode extends Node {
 		Scheduler sc = t.getProcess().getScheduler();
 		sc.getThread(tid).addWaiter(t);
 		t.getProcess().stopThread(t);
+		t.setStatus("waiting");
 	}
 
 	@Override
 	public void executeInstruction(MyThread t) {
 		execute(t);
-		done();
+		done(t.getID());
 	}
 
 }

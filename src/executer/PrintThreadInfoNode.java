@@ -15,4 +15,10 @@ public class PrintThreadInfoNode extends Node {
 		System.out.println("thread_id: " + t.getID() + ", pid: " + t.getProcess().getID());
 		System.out.println("clock: " + t.getPc() + ", wait: " + t.waitTime() + ", status: " + t.getStatus());
 	}
+
+	@Override
+	public void executeInstruction(MyThread t) {
+		execute(t);
+		done(t.getID());
+	}
 }

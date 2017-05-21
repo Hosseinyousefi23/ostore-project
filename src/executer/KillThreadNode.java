@@ -20,7 +20,6 @@ public class KillThreadNode extends Node {
 
 	@Override
 	public void execute(MyThread t) {
-
 		threadId.execute(t);
 		Integer tid = (Integer) threadId.getResult();
 		Scheduler sc = t.getProcess().getScheduler();
@@ -31,7 +30,7 @@ public class KillThreadNode extends Node {
 	@Override
 	public void executeInstruction(MyThread t) {
 		execute(t);
-		done();
+		done(t.getID());
 	}
 
 }

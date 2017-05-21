@@ -14,13 +14,13 @@ public class WhileNode extends Node {
 
 	@Override
 	public void init() {
+		super.init();
 		whileController = (ExprNode) children.get(2);
 		whileBlock = children.get(4).getChildren().get(1);
 	}
 
 	@Override
 	public void execute(MyThread t) {
-
 		whileController.execute(t);
 		int control = (int) whileController.getResult();
 
@@ -42,7 +42,7 @@ public class WhileNode extends Node {
 			}
 		} else if (nextCommands.get(t.getID()) == whileBlock) {
 			whileBlock.getNextCommands().replace(t.getID(), whileBlock.getChildren().get(0));
-			whileBlock.setDone(false);
+			whileBlock.setDone(false, t.getID());
 			return whileController;
 		}
 		return null;

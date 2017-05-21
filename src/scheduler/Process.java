@@ -38,6 +38,7 @@ public class Process {
 		init(pid, process, scheduler);
 		int tid = MyThread.getNewTid();
 		mainThread = new MyThread(tid, programTree, this);
+		addThread(mainThread);
 		runThread(mainThread);
 
 	}
@@ -63,6 +64,9 @@ public class Process {
 	}
 
 	private MyThread extractThreadToRun() {
+		if (runningThreads.size() == 0) {
+			return null;
+		}
 		Object[] keys = runningThreads.keySet().toArray();
 		MyThread candidate = runningThreads.get(keys[0]);
 		for (Object key : keys) {
@@ -75,8 +79,10 @@ public class Process {
 
 	public void executeNextInstruction() {
 		MyThread t = extractThreadToRun();
-		t.executeNextInstruction();
-		programCounter++;
+		if (t != null) {
+			t.executeNextInstruction();
+			programCounter++;
+		}
 
 	}
 
@@ -156,5 +162,9 @@ public class Process {
 
 	public void addGlobalVar(String name, Object value) {
 		globalVars.put(name, value);
+	}
+
+	public HashMap<String, Object> getGlobalVars() {
+		return globalVars;
 	}
 }

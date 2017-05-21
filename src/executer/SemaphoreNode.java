@@ -21,7 +21,6 @@ public class SemaphoreNode extends Node {
 
 	@Override
 	public void execute(MyThread t) {
-
 		String name = sname.getContent();
 		svalue.execute(t);
 		Integer value = (Integer) svalue.getResult();
@@ -31,6 +30,6 @@ public class SemaphoreNode extends Node {
 	@Override
 	public void executeInstruction(MyThread t) {
 		execute(t);
-		done();
+		done(t.getID());
 	}
 }

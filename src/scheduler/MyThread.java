@@ -61,7 +61,7 @@ public class MyThread {
 		lastRun = process.getScheduler().clock;
 		programTree.getRoot().executeInstruction(this);
 		programCounter++;
-		if (programTree.getRoot().isDone()) {
+		if (programTree.getRoot().isDone(id)) {
 			process.getScheduler().killThread(this);
 		}
 
@@ -104,5 +104,9 @@ public class MyThread {
 
 	public void addWaiter(MyThread t) {
 		waiters.add(t);
+	}
+
+	public HashMap<String, Object> getLocalVars() {
+		return localVars;
 	}
 }

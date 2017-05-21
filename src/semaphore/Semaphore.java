@@ -19,6 +19,7 @@ public class Semaphore {
 		} else {
 			t.getProcess().stopThread(t);
 			waiters.add(t);
+			t.setStatus("waiting");
 		}
 	}
 

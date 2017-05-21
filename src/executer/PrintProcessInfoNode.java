@@ -17,4 +17,9 @@ public class PrintProcessInfoNode extends Node {
 		System.out.println("threads: " + t.getProcess().getThreadsSize());
 	}
 
+	@Override
+	public void executeInstruction(MyThread t) {
+		execute(t);
+		done(t.getID());
+	}
 }

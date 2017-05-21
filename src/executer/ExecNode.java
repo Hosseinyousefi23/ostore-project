@@ -15,12 +15,12 @@ public class ExecNode extends Node {
 
 	@Override
 	public void init() {
+		super.init();
 		filePath = (ExprNode) children.get(2);
 	}
 
 	@Override
 	public void execute(MyThread t) {
-		int pid = t.getProcess().getID();
 		Scheduler sc = t.getProcess().getScheduler();
 		filePath.execute(t);
 		sc.exec(t.getProcess(), (String) filePath.getResult());
@@ -29,7 +29,7 @@ public class ExecNode extends Node {
 	@Override
 	public void executeInstruction(MyThread t) {
 		execute(t);
-		done();
+		done(t.getID());
 	}
 
 }

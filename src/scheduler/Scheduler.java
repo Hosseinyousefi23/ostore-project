@@ -53,13 +53,15 @@ public class Scheduler {
 	}
 
 	private void executeRunningQueue() {
-		Iterator<Integer> keys = runningQueue.keySet().iterator();
-		while (keys.hasNext()) {
-			Process p = runningQueue.get(keys.next());
-			p.executeNextInstruction();
-			clock++;
-			if (timeToCollect(p)) {
-				collect(p);
+		Object[] keys = runningQueue.keySet().toArray();
+		for (Object key : keys) {
+			Process p = runningQueue.get(key);
+			if (p != null) {
+				p.executeNextInstruction();
+				clock++;
+				if (timeToCollect(p)) {
+					collect(p);
+				}
 			}
 		}
 
@@ -79,7 +81,7 @@ public class Scheduler {
 	}
 
 	private boolean isDone() {
-		return readyQueueIsEmpty() && runningQueueIsEmpty();
+		return allProcesses.size() == 0;
 	}
 
 	private boolean readyQueueIsEmpty() {
@@ -173,7 +175,10 @@ public class Scheduler {
 			ParseTree tree = p.parse(code);
 			int pid = process.getID();
 			Process parent = process.getParent();
-			process = new Process(pid, tree, parent, this);
+			killProcess(process.getID());
+			Process process2 = new Process(pid, tree, parent, this);
+			addProcess(process2);
+			addToReadyQueue(process2);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

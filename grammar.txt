@@ -26,6 +26,16 @@
 <wait> ==> WAIT ( ID )
 <program> ==> <signal> <<program>>
 <signal> ==> SIGNAL ( ID )
+<program> ==> <global_assignment> <<program>>
+<global_assignment> ==> GSET ( ID , <expr> )
+<program> ==> <create_channel> <<program>>
+<create_channel> ==> CREATE_CHANNEL ( <expr> )
+<program> ==> <write> <<program>>
+<write> ==> WRITE ( <expr> , <expr> )
+<program> ==> <read> <<program>>
+<read> ==> READ ( <expr> , <expr> )
+<program> ==> <set_priority> <<program>>
+<set_priority> ==> SET_PRIORITY ( <expr> )
 <quit> ==> QUIT ( )
 <program> ==> \epsilon
 <assignment> ==> SET ( ID , <expr> )

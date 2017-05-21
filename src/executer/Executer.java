@@ -1,7 +1,5 @@
 package executer;
 
-import java.util.HashMap;
-
 import parser.ParseTree;
 import parser.Parser;
 import scheduler.MyThread;
