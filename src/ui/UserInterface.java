@@ -18,7 +18,7 @@ public class UserInterface {
 
 	public static void main(String[] args) {
 		extractAndApplyOptions(args);
-		Scheduler scheduler = new Scheduler(cores, sched);
+		Scheduler scheduler = new Scheduler(cores, sched, null);
 		while (true) {
 			System.out.println("Enter the file path to run or just type 'cmd' without quotes for interactive mode");
 			Scanner sc = new Scanner(System.in);

@@ -16,7 +16,7 @@ public class SemaphoreNode extends Node {
 	@Override
 	public void init() {
 		sname = children.get(2);
-		svalue = (ExprNode) children.get(3);
+		svalue = (ExprNode) children.get(4);
 	}
 
 	@Override

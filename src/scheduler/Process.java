@@ -148,7 +148,8 @@ public class Process {
 	}
 
 	private boolean isDone() {
-		return allThreads.size() == 0;
+		return runningThreads.size() == 0;
+
 	}
 
 	public void stopThread(MyThread t) {

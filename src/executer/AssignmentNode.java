@@ -6,15 +6,22 @@ import scheduler.MyThread;
 
 public class AssignmentNode extends Node {
 
+	private ExprNode assign;
+	private Node assignId;
+
 	public AssignmentNode(String name, ParseTree tree) {
 		super(name, tree);
+	}
 
+	@Override
+	public void init() {
+		super.init();
+		assign = (ExprNode) children.get(4);
+		assignId = children.get(2);
 	}
 
 	@Override
 	public void execute(MyThread t) {
-		ExprNode assign = (ExprNode) children.get(4);
-		Node assignId = children.get(2);
 		assign.execute(t);
 		Object resultassign = assign.getResult();
 		t.getProcess().addGlobalVar(assignId.getContent(), resultassign);

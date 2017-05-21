@@ -97,7 +97,7 @@ public class Node {
 	}
 
 	public void executeInstruction(MyThread t) {
-		if (nextCommands.get(t.getID()) == null){
+		if (nextCommands.get(t.getID()) == null) {
 			System.out.println();
 		}
 		nextCommands.get(t.getID()).executeInstruction(t);

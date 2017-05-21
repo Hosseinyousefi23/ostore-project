@@ -33,7 +33,7 @@
 <program> ==> <write> <<program>>
 <write> ==> WRITE ( <expr> , <expr> )
 <program> ==> <read> <<program>>
-<read> ==> READ ( <expr> , <expr> )
+<read> ==> READ ( <expr> , ID )
 <program> ==> <set_priority> <<program>>
 <set_priority> ==> SET_PRIORITY ( <expr> )
 <quit> ==> QUIT ( )

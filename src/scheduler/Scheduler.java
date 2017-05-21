@@ -2,14 +2,14 @@ package scheduler;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Scanner;
 
+import executer.Executer;
+import facade.Ostore;
 import parser.ParseTree;
 import parser.Parser;
-import executer.Executer;
 import semaphore.Semaphore;
 
 public class Scheduler {
@@ -22,16 +22,17 @@ public class Scheduler {
 	private HashMap<String, Semaphore> semaphores;
 	private Executer exe;
 	private HashMap<Integer, Process> allProcesses;
+	private Ostore os;
 
-	public Scheduler(int cores, int schedulTime) {
+	public Scheduler(int cores, int schedulTime, Ostore os) {
 		readyQueue = new HashMap<Integer, Process>();
 		runningQueue = new HashMap<Integer, Process>();
 		allProcesses = new HashMap<Integer, Process>();
+		this.os = os;
 		setCores(cores);
 		setSchedulTime(schedulTime);
 		exe = new Executer();
 		semaphores = new HashMap<String, Semaphore>();
-		// defaultProcess = new Process();
 
 	}
 
@@ -203,6 +204,10 @@ public class Scheduler {
 		p = null;
 	}
 
+	public HashMap<Integer, Process> getAllProcesses() {
+		return allProcesses;
+	}
+
 	public void killThread(MyThread t) {
 
 		for (MyThread thread : t.getWaiters()) {
@@ -246,5 +251,9 @@ public class Scheduler {
 
 	public void waitSemaphore(MyThread t, String name) {
 		semaphores.get(name).Wait(t);
+	}
+
+	public Ostore getOs() {
+		return os;
 	}
 }
