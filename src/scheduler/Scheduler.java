@@ -1,10 +1,7 @@
 package scheduler;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Scanner;
 
 import executer.Executer;
 import facade.Ostore;
@@ -24,13 +21,13 @@ public class Scheduler {
 	private HashMap<Integer, Process> allProcesses;
 	private Ostore os;
 
-	public Scheduler(int cores, int schedulTime, Ostore os) {
+	public Scheduler(int cores, int scheduleTime, Ostore os) {
 		readyQueue = new HashMap<Integer, Process>();
 		runningQueue = new HashMap<Integer, Process>();
 		allProcesses = new HashMap<Integer, Process>();
 		this.os = os;
 		setCores(cores);
-		setSchedulTime(schedulTime);
+		setSchedulTime(scheduleTime);
 		exe = new Executer();
 		semaphores = new HashMap<String, Semaphore>();
 
@@ -57,15 +54,26 @@ public class Scheduler {
 		Object[] keys = runningQueue.keySet().toArray();
 		for (Object key : keys) {
 			Process p = runningQueue.get(key);
+			clock++;
 			if (p != null) {
+				increaseWaitTimesBut(p);
 				p.executeNextInstruction();
-				clock++;
 				if (timeToCollect(p)) {
 					collect(p);
 				}
 			}
 		}
 
+	}
+
+	private void increaseWaitTimesBut(Process p) {
+		Object[] keys = runningQueue.keySet().toArray();
+		for (Object key : keys) {
+			Process process = runningQueue.get(key);
+			if (process == p)
+				continue;
+			process.increaseWaitTime();
+		}
 	}
 
 	private void collect(Process p) {
@@ -78,19 +86,11 @@ public class Scheduler {
 	}
 
 	private boolean timeUp(Process p) {
-		return p.getProgramCounter() >= schedulTime;
+		return p.getProgramCounter() >= schedulTime * p.getPriority();
 	}
 
 	private boolean isDone() {
 		return allProcesses.size() == 0;
-	}
-
-	private boolean readyQueueIsEmpty() {
-		return readyQueue.size() == 0;
-	}
-
-	private boolean runningQueueIsEmpty() {
-		return runningQueue.size() == 0;
 	}
 
 	private void shortTermSchedule() {
@@ -167,25 +167,6 @@ public class Scheduler {
 		return clock - p.getStartedReadyOn();
 	}
 
-	public void exec(Process process, String filePath) {
-		try {
-			Scanner scan = new Scanner(new File(filePath));
-			String code = scan.useDelimiter("\\Z").next();
-			scan.close();
-			Parser p = new Parser();
-			ParseTree tree = p.parse(code);
-			int pid = process.getID();
-			Process parent = process.getParent();
-			killProcess(process.getID());
-			Process process2 = new Process(pid, tree, parent, this);
-			addProcess(process2);
-			addToReadyQueue(process2);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-
-	}
-
 	public void addProcess(Process p) {
 		allProcesses.put(p.getID(), p);
 	}
@@ -219,6 +200,10 @@ public class Scheduler {
 
 		for (Semaphore s : semaphores.values()) {
 			s.getWaiters().remove(t);
+		}
+
+		if (t.getProcess().getAlreadyRunningCandidate() == t) {
+			t.getProcess().setAlreadyRunningCandidate(null);
 		}
 
 		t.getProcess().removeThread(t);

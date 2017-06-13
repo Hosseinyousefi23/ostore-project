@@ -17,6 +17,8 @@ import executer.GlobalAssignmentNode;
 import executer.IfNode;
 import executer.KillProcessNode;
 import executer.KillThreadNode;
+import executer.LoadPageNode;
+import executer.PrintPagesNode;
 import executer.PrintProcessInfoNode;
 import executer.PrintThreadInfoNode;
 import executer.QuitNode;
@@ -173,7 +175,7 @@ public class Parser {
 			return new SignalNode(element, tree);
 		case "<global_assignment>":
 			return new GlobalAssignmentNode(element, tree);
-		case "<create_channel":
+		case "<create_channel>":
 			return new CreateChannelNode(element, tree);
 		case "<read>":
 			return new ReadChannelNode(element, tree);
@@ -181,6 +183,10 @@ public class Parser {
 			return new WriteChannelNode(element, tree);
 		case "<set_priority>":
 			return new SetPriorityNode(element, tree);
+		case "<load_page>":
+			return new LoadPageNode(element, tree);
+		case "<print_pages>":
+			return new PrintPagesNode(element, tree);
 		default:
 			return new Node(element, tree);
 

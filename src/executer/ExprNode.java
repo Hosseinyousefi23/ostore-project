@@ -3,6 +3,7 @@ package executer;
 import parser.Node;
 import parser.ParseTree;
 import scheduler.MyThread;
+import ui.UserInterface;
 
 public class ExprNode extends Node {
 	private Object result;
@@ -144,12 +145,16 @@ public class ExprNode extends Node {
 
 		case "ID":
 			String varName = children.get(0).getContent();
-			if (t.getLocalVar(varName) != null) {
-				result = t.getLocalVar(varName);
-			} else if (t.getProcess().getGlobalVar(varName) != null) {
-				result = t.getProcess().getGlobalVar(varName);
+			if (t == null) {
+				result = UserInterface.interVars.get(varName);
 			} else {
-				throw new RuntimeException("variable \"" + varName + "\" is not defined");
+				if (t.getLocalVar(varName) != null) {
+					result = t.getLocalVar(varName);
+				} else if (t.getProcess().getGlobalVar(varName) != null) {
+					result = t.getProcess().getGlobalVar(varName);
+				} else {
+					throw new RuntimeException("variable \"" + varName + "\" is not defined");
+				}
 			}
 			break;
 

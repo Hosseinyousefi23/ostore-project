@@ -3,6 +3,7 @@ package executer;
 import parser.Node;
 import parser.ParseTree;
 import scheduler.MyThread;
+import ui.UserInterface;
 
 public class AssignmentNode extends Node {
 
@@ -24,7 +25,11 @@ public class AssignmentNode extends Node {
 	public void execute(MyThread t) {
 		assign.execute(t);
 		Object resultassign = assign.getResult();
-		t.getProcess().addGlobalVar(assignId.getContent(), resultassign);
+		if (t == null) {
+			UserInterface.interVars.put(assignId.getContent(), resultassign);
+		} else {
+			t.addLocalVar(assignId.getContent(), resultassign);
+		}
 	}
 
 	@Override

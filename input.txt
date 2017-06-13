@@ -1,1 +1,6 @@
-exec("in2.txt")
+load_page(1)
+load_page(2)
+load_page(3)
+load_page(4)
+print_pages()
+

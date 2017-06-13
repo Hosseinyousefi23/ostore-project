@@ -9,12 +9,16 @@ public class MyThread {
 	private static int idGenerator = 1;
 	private int id;
 	private String code;
-	private int programCounter;
+	private int waitTime = 0;
+	private int relationalWaitTime = 0; // waitTime between threads of same
+										// process (ignore priority)
+	private int priority = 1;
+	private int currentCPUBurstTime = 0;
+	private int programCounter = 1;
 	private ParseTree programTree;
 	private String status;
-	private int lastRun;
 	private ArrayList<MyThread> waiters;
-	private HashMap<String, Object> localVars;
+	private HashMap<String, Variable> localVars;
 	private Process process;
 
 	public static int getNewTid() {
@@ -23,10 +27,9 @@ public class MyThread {
 
 	private void init(int tid, ParseTree programTree, Process process) {
 		this.id = tid;
-		setCode(code);
 		setParent(process);
 		waiters = new ArrayList<MyThread>();
-		localVars = new HashMap<String, Object>();
+		localVars = new HashMap<String, Variable>();
 		this.programTree = programTree;
 	}
 
@@ -35,10 +38,29 @@ public class MyThread {
 		this.programTree.addThread(tid);
 	}
 
+	public MyThread(int tid, ParseTree programTree, int pc, Process process, MyThread parent,
+			HashMap<String, Variable> localVars) {
+		init(tid, programTree, process);
+		this.programCounter = pc + 1;
+		programTree.addNewThread(parent, this);
+		initLocalVars(localVars);
+	}
+
 	public MyThread(int tid, ParseTree programTree, int pc, Process process, MyThread parent) {
 		init(tid, programTree, process);
-		this.programCounter = pc;
+		this.programCounter = pc + 1;
 		programTree.addNewThread(parent, this);
+	}
+
+	private void initLocalVars(HashMap<String, Variable> localVariables) {
+		Object[] keys = localVariables.keySet().toArray();
+		for (Object key : keys) {
+			Variable var = localVariables.get(key);
+			String newKey = new String((String) key);
+			if (var.isPrivate())
+				continue;
+			addLocalVar(newKey, var.getValue());
+		}
 	}
 
 	public void setParent(Process process) {
@@ -58,7 +80,6 @@ public class MyThread {
 	}
 
 	public void executeNextInstruction() {
-		lastRun = process.getScheduler().clock;
 		programTree.getRoot().executeInstruction(this);
 		programCounter++;
 		if (programTree.getRoot().isDone(id)) {
@@ -76,12 +97,19 @@ public class MyThread {
 	}
 
 	public void addLocalVar(String name, Object value) {
-		localVars.put(name, value);
+		localVars.put(name, new Variable(value));
+	}
+
+	public void addPrivateLocalVar(String name, Object value) {
+		Variable var = new Variable(value);
+		var.setPrivate();
+		localVars.put(name, var);
+
 	}
 
 	public Object getLocalVar(String varname) {
 		if (localVars.containsKey(varname)) {
-			return localVars.get(varname);
+			return localVars.get(varname).getValue();
 		}
 		return null;
 	}
@@ -91,7 +119,7 @@ public class MyThread {
 	}
 
 	public int waitTime() {
-		return process.getScheduler().clock - lastRun;
+		return waitTime;
 	}
 
 	public void setStatus(String status) {
@@ -106,7 +134,44 @@ public class MyThread {
 		waiters.add(t);
 	}
 
-	public HashMap<String, Object> getLocalVars() {
+	public HashMap<String, Variable> getLocalVars() {
 		return localVars;
+	}
+
+	public void setProgramTree(ParseTree programTree) {
+		this.programTree = programTree;
+		this.programTree.addThread(id);
+	}
+
+	public void increaseWaitTime() {
+		waitTime++;
+	}
+
+	public void setPriority(int priority) {
+		this.priority = priority;
+	}
+
+	public int getPriority() {
+		return priority;
+	}
+
+	public boolean timeUp() {
+		return currentCPUBurstTime == priority;
+	}
+
+	public void increateCurrentCPUBurstTime() {
+		currentCPUBurstTime++;
+	}
+
+	public void resetCurrentCPUBurstTime() {
+		currentCPUBurstTime = 0;
+	}
+
+	public void increaseRelationalWaitTime() {
+		relationalWaitTime++;
+	}
+
+	public int relationalwaitTime() {
+		return relationalWaitTime;
 	}
 }

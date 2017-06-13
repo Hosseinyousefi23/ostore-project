@@ -160,6 +160,7 @@ public class Scanner {
 		meaningful.add("FOR");
 		meaningful.add("INDEX");
 		meaningful.add("ELSE");
+		meaningful.add("QUIT");
 		meaningful.add("CREATE_PROCESS");
 		meaningful.add("KILL_PROCESS");
 		meaningful.add("CREATE_THREAD");
@@ -177,7 +178,8 @@ public class Scanner {
 		meaningful.add("WRITE");
 		meaningful.add("READ");
 		meaningful.add("SET_PRIORITY");
-
+		meaningful.add("LOAD_PAGE");
+		meaningful.add("PRINT_PAGES");
 	}
 
 	private boolean isMeaningful(String word) {

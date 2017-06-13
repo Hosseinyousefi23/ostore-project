@@ -36,6 +36,10 @@
 <read> ==> READ ( <expr> , ID )
 <program> ==> <set_priority> <<program>>
 <set_priority> ==> SET_PRIORITY ( <expr> )
+<program> ==> <load_page> <<program>>
+<load_page> ==> LOAD_PAGE ( <expr> )
+<program> ==> <print_pages> <<program>>
+<print_pages> ==> PRINT_PAGES ( )
 <quit> ==> QUIT ( )
 <program> ==> \epsilon
 <assignment> ==> SET ( ID , <expr> )

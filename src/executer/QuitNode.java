@@ -13,7 +13,11 @@ public class QuitNode extends Node {
 
 	@Override
 	public void execute(MyThread t) {
-		UserInterface.quited = true;
+		if (t == null) {
+			UserInterface.quited = true;
+		} else {
+			t.getProcess().getScheduler().killThread(t);
+		}
 	}
 
 	@Override

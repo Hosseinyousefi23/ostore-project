@@ -1,9 +1,6 @@
-/scanner/
 /parser/
 /executer/
-/unittest/
-/scheduler/
-/semaphore/
-/ostore/
-/facade/
 /ui/
+/facade/
+/unittest/
+/memory/

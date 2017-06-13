@@ -11,6 +11,7 @@ public class Process {
 	private int startedReadyOn;
 	private int programCounter = 0;
 	private HashMap<Integer, MyThread> allThreads;
+	private MyThread alreadyRunningCandidate;
 	private HashMap<Integer, MyThread> runningThreads;
 	private MyThread mainThread;
 	private HashMap<String, Object> globalVars;
@@ -70,7 +71,7 @@ public class Process {
 		Object[] keys = runningThreads.keySet().toArray();
 		MyThread candidate = runningThreads.get(keys[0]);
 		for (Object key : keys) {
-			if (runningThreads.get(key).waitTime() > candidate.waitTime()) {
+			if (runningThreads.get(key).relationalwaitTime() > candidate.relationalwaitTime()) {
 				candidate = runningThreads.get(key);
 			}
 		}
@@ -78,10 +79,47 @@ public class Process {
 	}
 
 	public void executeNextInstruction() {
+		if (alreadyRunningCandidate != null) {
+			if (alreadyRunningCandidate.timeUp()) {
+				alreadyRunningCandidate.resetCurrentCPUBurstTime();
+				alreadyRunningCandidate = null;
+			} else {
+				executeInstructionThread(alreadyRunningCandidate);
+				return;
+			}
+		}
 		MyThread t = extractThreadToRun();
 		if (t != null) {
-			t.executeNextInstruction();
-			programCounter++;
+			increaseRelationalWaitTimesBut(t);
+			executeInstructionThread(t);
+		}
+	}
+
+	private void increaseRelationalWaitTimesBut(MyThread t) {
+		Object[] keys = runningThreads.keySet().toArray();
+		for (Object key : keys) {
+			MyThread thread = runningThreads.get(key);
+			if (thread == t)
+				continue;
+			thread.increaseRelationalWaitTime();
+		}
+	}
+
+	private void executeInstructionThread(MyThread t) {
+		increaseWaitTimesBut(t);
+		alreadyRunningCandidate = t;
+		t.executeNextInstruction();
+		t.increateCurrentCPUBurstTime();
+		programCounter++;
+	}
+
+	private void increaseWaitTimesBut(MyThread t) {
+		Object[] keys = runningThreads.keySet().toArray();
+		for (Object key : keys) {
+			MyThread thread = runningThreads.get(key);
+			if (thread == t)
+				continue;
+			thread.increaseWaitTime();
 		}
 
 	}
@@ -167,5 +205,31 @@ public class Process {
 
 	public HashMap<String, Object> getGlobalVars() {
 		return globalVars;
+	}
+
+	public void increaseWaitTime() {
+		Object[] keys = runningThreads.keySet().toArray();
+		for (Object key : keys) {
+			MyThread t = runningThreads.get(key);
+			t.increaseWaitTime();
+		}
+	}
+
+	public int getPriority() {
+		int ret = 0;
+		Object[] keys = runningThreads.keySet().toArray();
+		for (Object key : keys) {
+			MyThread t = runningThreads.get(key);
+			ret += t.getPriority();
+		}
+		return ret;
+	}
+
+	public MyThread getAlreadyRunningCandidate() {
+		return alreadyRunningCandidate;
+	}
+
+	public void setAlreadyRunningCandidate(MyThread alreadyRunningCandidate) {
+		this.alreadyRunningCandidate = alreadyRunningCandidate;
 	}
 }
