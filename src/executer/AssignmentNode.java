@@ -12,7 +12,6 @@ public class AssignmentNode extends Node {
 
 	public AssignmentNode(String name, ParseTree tree) {
 		super(name, tree);
-		System.out.println();
 	}
 
 	@Override
