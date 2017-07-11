@@ -11,7 +11,7 @@ public class MemoryManagerFactory {
 		case "LFU":
 			return new LFUMemoryManager(pageSize, frameSize);
 		case "MFU":
-			return new MFOMemoryManager(pageSize, frameSize);
+			return new MFUMemoryManager(pageSize, frameSize);
 		default:
 			throw new RuntimeException("loading algorithm \"" + loadAlgorithm + "\" is not known!");
 		}

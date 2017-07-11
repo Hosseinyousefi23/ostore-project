@@ -2,10 +2,10 @@ package memory;
 
 import java.util.ArrayList;
 
-public class LFUMemoryManager extends MemoryManager {
+public class MFUMemoryManager extends MemoryManager {
 	private ArrayList<int[]> arr;
 
-	public LFUMemoryManager(int pageSize, int frameSize) {
+	public MFUMemoryManager(int pageSize, int frameSize) {
 		super(pageSize, frameSize);
 		arr = new ArrayList<int[]>();
 	}
@@ -25,12 +25,12 @@ public class LFUMemoryManager extends MemoryManager {
 			return;
 		}
 		if (isFull()) {
-			int min = Integer.MAX_VALUE;
+			int max = Integer.MAX_VALUE;
 			int minIdx = 0;
 			for (int i = 0; i < frame.length; i++) {
 				int k = idxInArray(frame[i]);
-				if (arr.get(k)[1] < min) {
-					min = arr.get(k)[1];
+				if (arr.get(k)[1] > max) {
+					max = arr.get(k)[1];
 					minIdx = i;
 				}
 			}

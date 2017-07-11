@@ -1,7 +1,6 @@
 package facade;
 
 import java.util.HashMap;
-
 import filesystem.FileOrganizationModule;
 import memory.MemoryManager;
 import memory.MemoryManagerFactory;
@@ -40,4 +39,5 @@ public class Ostore {
 	public FileOrganizationModule getFileManager() {
 		return fileManager;
 	}
+
 }

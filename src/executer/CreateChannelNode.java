@@ -22,7 +22,7 @@ public class CreateChannelNode extends Node {
 	public void execute(MyThread t) {
 		channelId.execute(t);
 		int result = (Integer) channelId.getResult();
-		if (t.getProcess().getScheduler().getOs() == null){
+		if (t.getProcess().getScheduler().getOs() == null) {
 			System.out.println();
 		}
 		t.getProcess().getScheduler().getOs().addChannel(result);
