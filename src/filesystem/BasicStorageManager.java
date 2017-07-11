@@ -7,15 +7,24 @@ public class BasicStorageManager {
 		storage = new PhysicalStorage();
 	}
 
-	public int[] readBlock(int index) {
-		int[] block = new int[2];
-		block[0] = storage.read(2 * index);
-		block[1] = storage.read(2 * index + 1);
-		return block;
+	public PhysicalStorage getStorage() {
+		return storage;
 	}
 
-	public void writeBlock(int index, int[] value) {
-		storage.write(2 * index, value[0]);
-		storage.write(2 * index + 1, value[1]);
+	public void printFreeMap() {
+		String s = "";
+		int counter = 0;
+		for (int i = 11; i < 50; i++) {
+			Block b = new Block(storage, i);
+			if (b.isFree()) {
+				s += i + " ";
+				counter++;
+			}
+		}
+		if (counter != 0) {
+			s = s.substring(0, s.length() - 1);
+		}
+		s = "[" + counter + "]: " + s;
+		System.out.println(s);
 	}
 }

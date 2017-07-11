@@ -180,6 +180,24 @@ public class Scanner {
 		meaningful.add("SET_PRIORITY");
 		meaningful.add("LOAD_PAGE");
 		meaningful.add("PRINT_PAGES");
+		meaningful.add("READ_PHYSICAL");
+		meaningful.add("WRITE_PHYSICAL");
+		meaningful.add("READ_BASIC");
+		meaningful.add("WRITE_BASIC");
+		meaningful.add("READ_ORG");
+		meaningful.add("WRITE_ORG");
+		meaningful.add("CREATE_FILE");
+		meaningful.add("OPEN");
+		meaningful.add("READ_FILE");
+		meaningful.add("APPEND");
+		meaningful.add("WRITE_FILE");
+		meaningful.add("CLEAR");
+		meaningful.add("DELETE_FILE");
+		meaningful.add("SIZE");
+		meaningful.add("PRINT_MAP");
+		meaningful.add("PRINT_FILE_MAP");
+		meaningful.add("PRINT_FREE_MAP");
+		
 	}
 
 	private boolean isMeaningful(String word) {
