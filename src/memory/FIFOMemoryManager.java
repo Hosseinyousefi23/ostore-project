@@ -1,6 +1,7 @@
 package memory;
 
 public class FIFOMemoryManager extends MemoryManager {
+	private int currentPos = 0;
 
 	public FIFOMemoryManager(int pageSize, int frameSize) {
 		super(pageSize, frameSize);
@@ -8,7 +9,7 @@ public class FIFOMemoryManager extends MemoryManager {
 
 	@Override
 	public void loadPage(int number) {
-		// TODO load page
+		frame[(++currentPos) % frameSize] = number;
 	}
 
 }
