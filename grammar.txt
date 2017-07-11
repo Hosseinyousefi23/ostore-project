@@ -40,6 +40,40 @@
 <load_page> ==> LOAD_PAGE ( <expr> )
 <program> ==> <print_pages> <<program>>
 <print_pages> ==> PRINT_PAGES ( )
+<program> ==> <read_physical> <<program>>
+<read_physical> ==> READ_PHYSICAL ( <expr> , ID )
+<program> ==> <write_physical> <<program>>
+<write_physical> ==> WRITE_PHYSICAL ( <expr> , <expr> )
+<program> ==> <read_basic> <<program>>
+<read_basic> ==> READ_BASIC ( <expr> , ID , ID )
+<program> ==> <write_basic> <<program>>
+<write_basic> ==> WRITE_BASIC ( <expr> , <expr> , <expr> )
+<program> ==> <read_org> <<program>>
+<read_org> ==> READ_ORG ( <expr> , <expr> , ID , ID )
+<program> ==> <write_org> <<program>>
+<write_org> ==> WRITE_ORG ( <expr> , <expr> , <expr> , <expr> )
+<program> ==> <create_file> <<program>>
+<create_file> ==> CREATE_FILE ( <expr> )
+<program> ==> <open> <<program>>
+<open> ==> OPEN ( <expr> , ID )
+<program> ==> <read_file> <<program>>
+<read_file> ==> READ_FILE ( <expr> , <expr> , ID , ID )
+<program> ==> <append> <<program>>
+<append> ==> APPEND ( <expr> , <expr> )
+<program> ==> <write_file> <<program>>
+<write_file> ==> WRITE_FILE ( <expr> , <expr> , <expr> )
+<program> ==> <clear> <<program>>
+<clear> ==> CLEAR ( <expr> )
+<program> ==> <delete_file> <<program>>
+<delete_file> ==> DELETE_FILE ( <expr> )
+<program> ==> <size> <<program>>
+<size> ==> SIZE ( <expr> , ID )
+<program> ==> <print_map> <<program>>
+<print_map> ==> PRINT_MAP ( )
+<program> ==> <print_file_map> <<program>>
+<print_file_map> ==> PRINT_FILE_MAP ( )
+<program> ==> <print_free_map> <<program>>
+<print_free_map> ==> PRINT_FREE_MAP ( )
 <quit> ==> QUIT ( )
 <program> ==> \epsilon
 <assignment> ==> SET ( ID , <expr> )

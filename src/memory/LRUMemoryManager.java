@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class LRUMemoryManager extends MemoryManager {
 	private ArrayList<int[]> arr;
 	private int num;
+
 	public LRUMemoryManager(int pageSize, int frameSize) {
 		super(pageSize, frameSize);
 		arr = new ArrayList<int[]>();

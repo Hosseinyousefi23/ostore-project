@@ -5,10 +5,14 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import executer.AppendNode;
 import executer.AssignmentNode;
+import executer.ClearNode;
 import executer.CreateChannelNode;
+import executer.CreateFileNode;
 import executer.CreateProcessNode;
 import executer.CreateThreadNode;
+import executer.DeleteFileNode;
 import executer.EchoNode;
 import executer.ExecNode;
 import executer.ExprNode;
@@ -18,19 +22,32 @@ import executer.IfNode;
 import executer.KillProcessNode;
 import executer.KillThreadNode;
 import executer.LoadPageNode;
+import executer.OpenNode;
+import executer.PrintFileMapNode;
+import executer.PrintFreeMapNode;
+import executer.PrintMapNode;
 import executer.PrintPagesNode;
 import executer.PrintProcessInfoNode;
 import executer.PrintThreadInfoNode;
 import executer.QuitNode;
+import executer.ReadBasicNode;
 import executer.ReadChannelNode;
+import executer.ReadFileNode;
+import executer.ReadOrgNode;
+import executer.ReadPhysicalNode;
 import executer.SemaphoreNode;
 import executer.SetPriorityNode;
 import executer.SignalNode;
+import executer.SizeNode;
 import executer.WaitForProcessNode;
 import executer.WaitForThreadNode;
 import executer.WaitNode;
 import executer.WhileNode;
+import executer.WriteBasicNode;
 import executer.WriteChannelNode;
+import executer.WriteFileNode;
+import executer.WriteOrgNode;
+import executer.WritePhysicalNode;
 import scanner.Scanner;
 
 public class Parser {
@@ -187,6 +204,40 @@ public class Parser {
 			return new LoadPageNode(element, tree);
 		case "<print_pages>":
 			return new PrintPagesNode(element, tree);
+		case "<read_physical>":
+			return new ReadPhysicalNode(element, tree);
+		case "<write_physical>":
+			return new WritePhysicalNode(element, tree);
+		case "<read_basic>":
+			return new ReadBasicNode(element, tree);
+		case "<write_basic>":
+			return new WriteBasicNode(element, tree);
+		case "<read_org>":
+			return new ReadOrgNode(element, tree);
+		case "<write_org>":
+			return new WriteOrgNode(element, tree);
+		case "<create_file>":
+			return new CreateFileNode(element, tree);
+		case "<open>":
+			return new OpenNode(element, tree);
+		case "<read_file>":
+			return new ReadFileNode(element, tree);
+		case "<append>":
+			return new AppendNode(element, tree);
+		case "<write_file>":
+			return new WriteFileNode(element, tree);
+		case "<clear>":
+			return new ClearNode(element, tree);
+		case "<delete_file>":
+			return new DeleteFileNode(element, tree);
+		case "<size>":
+			return new SizeNode(element, tree);
+		case "<print_map>":
+			return new PrintMapNode(element, tree);
+		case "<print_file_map>":
+			return new PrintFileMapNode(element, tree);
+		case "<print_free_map>":
+			return new PrintFreeMapNode(element, tree);
 		default:
 			return new Node(element, tree);
 

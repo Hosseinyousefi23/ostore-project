@@ -1,7 +1,7 @@
-/parser/
 /executer/
-/ui/
+/filesystem/
+/parser/
 /facade/
-/unittest/
+/scanner/
+/ui/
 /memory/
-/scheduler/
