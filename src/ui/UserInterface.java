@@ -24,9 +24,9 @@ public class UserInterface {
 
 	public static void main(String[] args) {
 		extractAndApplyOptions(args);
-		Ostore os = new Ostore(cores, sched, pageSize, frameSize, loadAlgorithm);
-
+		
 		while (true) {
+			Ostore os = new Ostore(cores, sched, pageSize, frameSize, loadAlgorithm);
 			String command;
 			if (isFileGiven()) {
 				command = filePath;
@@ -41,6 +41,7 @@ public class UserInterface {
 				openInteractiveMode();
 			} else {
 				executeFile(command, os);
+				filePath = "";
 			}
 		}
 
@@ -52,11 +53,13 @@ public class UserInterface {
 			if (args[i].startsWith("-")) {
 				if (i + 1 < args.length) {
 					applyoption(args[i], args[i + 1]);
+					i += 2;
 				} else {
 					throwInvalidInput(args[i]);
 				}
 			} else {
 				setFilePath(args[i]);
+				i++;
 			}
 		}
 
@@ -83,6 +86,7 @@ public class UserInterface {
 			setPageSize(Integer.parseInt(data[0]));
 			setFrameSize(Integer.parseInt(data[1]));
 			setLoadAlgorithm(data[2]);
+			break;
 
 		default:
 			throwInvalidInput(option);
