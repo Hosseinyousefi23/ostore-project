@@ -6,7 +6,23 @@ import java.security.cert.PKIXRevocationChecker.Option;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import executer.AppendNode;
+import executer.ClearNode;
+import executer.CreateFileNode;
+import executer.DeleteFileNode;
 import executer.Executer;
+import executer.OpenNode;
+import executer.PrintFileMapNode;
+import executer.PrintMapNode;
+import executer.ReadBasicNode;
+import executer.ReadFileNode;
+import executer.ReadOrgNode;
+import executer.ReadPhysicalNode;
+import executer.SizeNode;
+import executer.WriteBasicNode;
+import executer.WriteFileNode;
+import executer.WriteOrgNode;
+import executer.WritePhysicalNode;
 import facade.Ostore;
 import parser.ParseTree;
 import parser.Parser;
@@ -168,6 +184,23 @@ public class UserInterface {
 		case "<write>":
 		case "<load_page>":
 		case "<print_pages>":
+		case "<read_physical>":
+		case "<write_physical>":
+		case "<read_basic>":
+		case "<write_basic>":
+		case "<read_org>":
+		case "<write_org>":
+		case "<create_file>":
+		case "<open>":
+		case "<read_file>":
+		case "<append>":
+		case "<write_file>":
+		case "<clear>":
+		case "<delete_file>":
+		case "<size>":
+		case "<print_map>":
+		case "<print_file_map>":
+		case "<print_free_map>":
 			return true;
 		default:
 			return false;
