@@ -14,6 +14,7 @@ public class LFUMemoryManager extends MemoryManager {
 	public void loadPage(int number) {
 		int n = idxInArray(number);
 		if (n != -1) {
+			
 			int[] oldVal = arr.get(n);
 			int[] newVal = new int[] { oldVal[0], oldVal[1] + 1 };
 			arr.set(n, newVal);
